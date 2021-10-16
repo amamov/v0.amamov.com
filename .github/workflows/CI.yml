@@ -1,0 +1,79 @@
+name: CI workflow
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
+
+jobs:
+  eslint:
+    name: ESLINT
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: CHECK ROOT PATH
+        run: ls -a
+      - name: USE NODE 14.17
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.17'
+      - name: NODE VERSION CHECK
+        run: node --version
+      - name: NPM VERSION UPGRADE
+        run: npm i -g npm
+      - name: NPM VERSION CHECK
+        run: npm --version
+      - name: INSTALL NODE PACKAGE
+        run: npm i
+      # code process
+      - name: CHECK ESLINT
+        run: npm run lint
+
+  prettier:
+    name: PRETTIER
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: CHECK ROOT PATH
+        run: ls -a
+      - name: USE NODE 14.17
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.17'
+      - name: NODE VERSION CHECK
+        run: node --version
+      - name: NPM VERSION UPGRADE
+        run: npm i -g npm
+      - name: NPM VERSION CHECK
+        run: npm --version
+      - name: INSTALL NODE PACKAGE
+        run: npm i
+      # code process
+      - name: CHECK PRETTIER
+        run: npm run prettier
+
+  build:
+    name: BUILD TEST
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: CHECK ROOT PATH
+        run: ls -a
+      - name: USE NODE 14.17
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.17'
+      - name: NODE VERSION CHECK
+        run: node --version
+      - name: NPM VERSION UPGRADE
+        run: npm i -g npm
+      - name: NPM VERSION CHECK
+        run: npm --version
+      - name: INSTALL NODE PACKAGE
+        run: npm i
+      # code process
+      - name: CHECK PROJECT BUILD
+        run: npm run build

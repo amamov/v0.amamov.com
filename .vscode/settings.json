@@ -1,0 +1,15 @@
+{
+  "eslint.codeAction.showDocumentation": {
+    "enable": true
+  },
+  "eslint.alwaysShowStatus": true,
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
+  "npm.packageManager": "npm",
+  "[pug]": {
+    "editor.defaultFormatter": "alexbabichev.formatter-pug"
+  }
+}
