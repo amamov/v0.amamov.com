@@ -1,3 +1,5 @@
+//* REST API에 적용 */
+
 import {
   ExceptionFilter,
   Catch,
