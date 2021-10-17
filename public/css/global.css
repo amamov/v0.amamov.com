@@ -21,6 +21,10 @@ body {
   color: black;
 }
 
+input:focus {
+  outline: none;
+}
+
 #wrapper {
   display: flex;
   flex-direction: column;

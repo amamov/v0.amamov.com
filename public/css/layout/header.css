@@ -1,18 +1,30 @@
-header {
-}
-
 #logo {
-  /* font-size: 100px; */
+  font-family: var(--font-sharetechmono-regular);
+  font-size: 28px;
+  font-weight: bolder;
 }
 
 #header_form {
+  height: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: end;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 #header_form > input {
-  max-height: 33px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 25px;
+  padding: 0 3px;
+  margin: 0;
+  border: 1px solid gray;
+  border-top-width: 0;
+  border-right-width: 0;
+  border-left-width: 0;
+  padding-left: 7px;
 }
 
 #header_form > button {
@@ -20,4 +32,31 @@ header {
   border: 0;
   text-align: center;
   text-justify: center;
+}
+
+@media screen and (max-width: 768px) {
+}
+
+@media screen and (max-width: 576px) {
+  #logo {
+    font-size: 22px;
+  }
+
+  #header_form > input {
+    display: none;
+    width: 100px;
+  }
+
+  #header_form > input::placeholder {
+    font-size: 13px;
+  }
+
+  #header_form > button {
+    padding-right: 0;
+    height: 19px;
+  }
+
+  #header_form > button > svg {
+    height: 15px;
+  }
 }
