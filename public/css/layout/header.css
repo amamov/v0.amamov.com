@@ -2,6 +2,7 @@
   font-family: var(--font-sharetechmono-regular);
   font-size: 28px;
   font-weight: bolder;
+  cursor: pointer;
 }
 
 #header_form {
@@ -13,6 +14,7 @@
 }
 
 #header_form > input {
+  background-color: inherit;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -34,9 +36,6 @@
   text-justify: center;
 }
 
-@media screen and (max-width: 768px) {
-}
-
 @media screen and (max-width: 576px) {
   #logo {
     font-size: 22px;
@@ -44,7 +43,7 @@
 
   #header_form > input {
     display: none;
-    width: 100px;
+    width: 160px;
   }
 
   #header_form > input::placeholder {
@@ -58,5 +57,11 @@
 
   #header_form > button > svg {
     height: 15px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  #header_form > input {
+    width: 100px;
   }
 }
