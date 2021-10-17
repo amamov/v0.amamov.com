@@ -21,7 +21,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     this.logger.error(error)
     if (status === 404) response.redirect('/')
     else if (status === 403) response.redirect('/login')
-    else if (status === 400) {
+    else if (status === 400 || status === 401) {
       if (typeof error === 'string')
         response.render('pages/400', { message: error })
       else response.render('pages/400', error)
