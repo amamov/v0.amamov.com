@@ -1,4 +1,35 @@
+@font-face {
+  font-family: 'notosans_regular';
+  src: url('../fonts/NotoSansKR-Regular.woff') format('embedded-opentype'),
+    url('../fonts/NotoSansKR-Regular.woff') format('woff'),
+    url('../fonts/NotoSansKR-Regular.woff') format('ttf'),
+    url('../fonts/NotoSansKR-Regular.woff') format('truetype'),
+    url('../fonts/NotoSansKR-Regular.woff') format('svg');
+  font-display: swap;
+}
+
+:root {
+  --font-notosans-regular: 'notosans_regular';
+}
+
+* {
+  font-family: var(--font-notosans-regular);
+}
+
 body {
-  background-color: azure;
+  background-color: ffffff;
   color: black;
+}
+
+#wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding-top: 20px;
+  padding-bottom: 10px;
+}
+
+#wrapper > main {
+  /* overflow: auto; 스크롤을 내려도 footer가 붙어있음 */
+  flex: 1 auto;
 }

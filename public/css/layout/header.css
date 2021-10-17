@@ -6,10 +6,18 @@ header {
 }
 
 #header_form {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
 }
 
 #header_form > input {
+  max-height: 33px;
 }
 
 #header_form > button {
+  background: inherit;
+  border: 0;
+  text-align: center;
+  text-justify: center;
 }

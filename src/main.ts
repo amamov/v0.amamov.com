@@ -4,7 +4,7 @@ import { NestExpressApplication } from '@nestjs/platform-express'
 import { GlobalMiddlewareSettings } from '@common/middlewares/global.middleware'
 import { AppModule } from './app.module'
 import * as path from 'path'
-import { NotFoundExceptionFilter } from '@common/exceptions/not-found-exception.filter'
+import { HttpExceptionFilter } from '@common/exceptions/http-exception.filter'
 
 class Server extends GlobalMiddlewareSettings {
   constructor(protected app: NestExpressApplication) {
@@ -21,8 +21,7 @@ class Server extends GlobalMiddlewareSettings {
     this.setSessionAndCookieMiddleware()
     this.setCORSMiddleware()
     this.setPassportMiddleware()
-    // this.app.useGlobalFilters(new NotFoundExceptionFilter())
-    this.app.useGlobalFilters(new NotFoundExceptionFilter())
+    this.app.useGlobalFilters(new HttpExceptionFilter())
     this.app.useStaticAssets(path.join(__dirname, '..', 'public'), {
       prefix: '/static/',
     })
