@@ -1,12 +1,10 @@
-// import { ValidationInfoEntity } from './models/validation-info.entity'
-import { Response } from 'express'
-
 import {
   BadRequestException,
   Injectable,
   Logger,
   UnauthorizedException,
 } from '@nestjs/common'
+import { Response } from 'express'
 import { InjectRepository } from '@nestjs/typeorm'
 import { JwtService } from '@nestjs/jwt'
 import { Repository } from 'typeorm'
@@ -15,6 +13,7 @@ import * as bcrypt from 'bcrypt'
 import { UserDto } from './dtos/user.dto'
 import { UserLogInDto } from './dtos/user-login.dto'
 import { UserRegisterDto } from './dtos/user-register.dto'
+import { ConfigService } from '@nestjs/config'
 
 @Injectable()
 export class UsersService {
@@ -23,12 +22,13 @@ export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly usersRepository: Repository<UserEntity>,
-    // private readonly validationInfoRepository: Repository<ValidationInfoEntity>,
     private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
   ) {}
 
   async registerUser(body: UserRegisterDto): Promise<UserDto> {
     const { email, password } = body
+    this.logger.debug('hello')
     const user = await this.usersRepository.findOne({ email })
     if (user) {
       throw new UnauthorizedException('해당하는 이메일은 이미 존재합니다.')
@@ -52,7 +52,7 @@ export class UsersService {
     try {
       const jwt = await this.jwtService.signAsync(
         { sub: user.id },
-        { secret: process.env.JWT_SECRET },
+        { secret: this.configService.get('SECRET_KEY') },
       )
       response.cookie('jwt', jwt, { httpOnly: true })
 
@@ -67,15 +67,4 @@ export class UsersService {
     this.logger.log(user)
     return user
   }
-
-  // async createTokenForResetPassword(email: string) {
-  //   const token = Math.random().toString(18).substr(2, 12)
-  //   this.logger.log(token)
-  //   try {
-  //     await this.validationInfoRepository.save({ email, token })
-  //     return { success: true }
-  //   } catch (error) {
-  //     return { success: false }
-  //   }
-  // }
 }

@@ -8,21 +8,40 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'code';
+  src: url('../fonts/Code.woff') format('embedded-opentype'),
+    url('../fonts/Code.woff') format('woff'),
+    url('../fonts/Code.woff') format('ttf'),
+    url('../fonts/Code.woff') format('truetype'),
+    url('../fonts/Code.woff') format('svg');
+  font-display: swap;
+}
+
 :root {
   --font-notosans-regular: 'notosans_regular';
+  --font-code: 'code';
 }
 
 * {
   font-family: var(--font-notosans-regular);
+  /* font-family: var(--font-code); */
 }
 
 body {
   /* background-color: ffffff; */
-  background-color: rgb(241, 242, 245);
-  color: black;
+  background-color: rgb(243, 242, 238);
+  max-width: 768px;
+  margin: 0 auto;
+  color: #323228;
 }
 
 input:focus {
+  outline: none;
+}
+
+button:focus {
+  cursor: pointer;
   outline: none;
 }
 
@@ -37,4 +56,5 @@ input:focus {
 #wrapper > main {
   /* overflow: auto; 스크롤을 내려도 footer가 붙어있음 */
   flex: 1 auto;
+  margin-top: 60px;
 }

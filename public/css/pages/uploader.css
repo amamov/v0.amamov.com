@@ -1,0 +1,14 @@
+body {
+  max-width: 793px; /* 768 + 25 */
+}
+
+h1 {
+  border-bottom: 1px solid #dbdbdb !important;
+}
+
+h2 {
+  border-bottom: 0 !important;
+}
+
+#submit_bt {
+}

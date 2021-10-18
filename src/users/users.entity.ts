@@ -12,9 +12,6 @@ import { ApiProperty } from '@nestjs/swagger'
 @Index('email', ['email'], { unique: true })
 @Entity({
   name: 'USER',
-  orderBy: {
-    username: 'ASC',
-  },
 }) // USER : 테이블 명
 export class UserEntity extends CommonEntity {
   @ApiProperty({ example: 'amamov@amamov.co' })
@@ -22,16 +19,10 @@ export class UserEntity extends CommonEntity {
   @Column({ type: 'varchar', unique: true, nullable: false })
   email: string
 
-  @ApiProperty({ example: 'amamov' })
-  @IsString()
-  @IsNotEmpty()
-  @Column({ type: 'varchar', nullable: false, length: 200 })
-  username: string
-
   @ApiProperty({ example: '1205' })
   @IsString()
   @IsNotEmpty()
-  @Column({ type: 'varchar', nullable: false, select: false })
+  @Column({ type: 'varchar', nullable: false })
   password: string
 
   @ApiProperty({ example: 'false' })

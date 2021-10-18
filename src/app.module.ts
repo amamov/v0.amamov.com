@@ -23,7 +23,7 @@ const typeOrmModuleOptions = {
     password: configService.get('DB_PASSWORD'),
     database: configService.get('DB_NAME'),
     entities: [UserEntity],
-    synchronize: false,
+    synchronize: true,
     autoLoadEntities: true,
     logging: true,
     keepConnectionAlive: true,
