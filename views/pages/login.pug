@@ -1,4 +1,17 @@
 extends ../layout/base
 
+block style
+  link(rel="stylesheet", href="/static/css/pages/login.css")
+
 block main
-  h1 login
+
+  section(id="login_wrapper")
+    form(action="/login", method="POST")
+      div(class="mb-3")
+        label(for="email" class="form-label") Email
+        input(type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp")
+      div(class="mb-3")
+        label(for="exampleInputPassword1" class="form-label") Password
+        input(type="password" name="password" class="form-control" id="exampleInputPassword1")
+      div(id="button_box")
+        button(type="submit" class="btn btn-dark") Submit

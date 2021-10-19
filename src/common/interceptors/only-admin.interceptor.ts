@@ -14,6 +14,6 @@ export class OnlyAdminInterceptor implements NestInterceptor {
     const request: Request = context.switchToHttp().getRequest()
     const user = request.user
     if (user && user.isAdmin) return next.handle().pipe(map((data) => data))
-    else throw new UnauthorizedException('Authentication is required.')
+    else throw new UnauthorizedException('인증에 문제가 있습니다.')
   }
 }

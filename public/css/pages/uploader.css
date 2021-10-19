@@ -1,0 +1,15 @@
+@import url('/static/css/editor.css');
+
+body {
+  max-width: 793px; /* 768 + 25 */
+}
+
+#blog-submit-bt {
+  display: flex;
+  justify-content: end;
+}
+
+#blog-submit-bt > button {
+  width: 150px;
+  margin-bottom: 100px;
+}

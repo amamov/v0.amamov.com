@@ -1,16 +1,15 @@
 import {
   Body,
-  ClassSerializerInterceptor,
   Controller,
   Get,
   Logger,
+  NotFoundException,
   Post,
+  Redirect,
   Render,
   Res,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common'
-import { ApiTags } from '@nestjs/swagger'
 import { Response } from 'express'
 import { CurrentUser } from '@common/decorators/current-user.decorator'
 import { JwtAuthGuard } from './jwt/jwt.guard'
@@ -20,36 +19,40 @@ import { UserDto } from './dtos/user.dto'
 import { UserRegisterDto } from './dtos/user-register.dto'
 
 @Controller()
-@ApiTags('USERS : 사용자')
-@UseInterceptors(ClassSerializerInterceptor) // https://docs.nestjs.kr/techniques/serialization#exclude-properties
 export class UsersController {
   private readonly logger = new Logger(UsersController.name)
 
   constructor(private readonly usersService: UsersService) {}
 
+  @Post('users')
+  async signUp(@Body() body: UserRegisterDto) {
+    return this.usersService.registerUser(body)
+  }
+
   @Get('login')
+  @UseGuards(JwtAuthGuard)
   @Render('pages/login')
   async getLogIn(
-    @Res({ passthrough: true }) response: Response, // https://docs.nestjs.kr/controllers#routing
+    @CurrentUser() currentUser: UserDto,
+    @Res({ passthrough: true }) response: Response,
   ) {
-    return {}
+    this.logger.debug(currentUser)
+    if (currentUser) throw new NotFoundException('로그인 완료')
+    return { title: 'amamov | login' }
   }
 
   @Post('login')
-  @Render('pages/login')
+  @Redirect('/')
   async logIn(
     @Body() body: UserLogInDto,
-    @Res({ passthrough: true }) response: Response, // https://docs.nestjs.kr/controllers#routing
+    @Res({ passthrough: true }) response: Response,
   ) {
-    return this.usersService.logIn(body, response)
+    await this.usersService.logIn(body, response)
   }
 
-  @Post('logout')
-  @Render('pages/login')
+  @Get('logout')
+  @Redirect('/')
   async logOut(@Res({ passthrough: true }) response: Response) {
-    //   response.clearCookie('jwt')
-    //   return {
-    //     success: true,
-    //   }
+    response.clearCookie('jwt')
   }
 }

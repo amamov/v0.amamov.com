@@ -1,4 +1,41 @@
 extends ../layout/base
 
+block style
+  link(rel="stylesheet" href="https://uicdn.toast.com/editor/3.1.0/toastui-editor.min.css")
+  link(rel="stylesheet" href="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.css")
+  link(rel="stylesheet" href="/static/css/code.css")
+  link(rel="stylesheet" href="/static/css/pages/uploader.css")
+
 block main
-  h1 uploader
+
+
+  hr
+
+  form(id="blog-upload-form")
+    h4 &lt;Blog Title /&gt;
+    input(required class="form-control mb-5 bg-color-inherit" type="text" id="blog-title-input" name="title" placeholder="제목을 입력해주세요.")
+
+    h4 &lt;Blog Thumbnail /&gt;
+    input(required class="form-control mb-2 bg-color-inherit" type="file" accept="image/*" id="blog-thumbnail-input" name="thumbnail")
+    #blog-thumbnail-preview(class="mb-5 d-flex justify-content-center")
+
+    h4 &lt;Blog Tags /&gt;
+    input(class="form-control mb-5 bg-color-inherit" type="text" id="blog-tags-input" name="tags" placeholder="# 기준으로 태그를 입력해주세요. ex. #python #javascript")
+
+    h4 &lt;Blog Description /&gt;
+    textarea(required class="form-control mb-5 bg-color-inherit" type="text" id="blog-description-input" name="description" placeholder="포스트를 짧게 소개해보세요.")
+
+    h4 &lt;Blog Description /&gt;
+    input(class="mr-2" type="checkbox" id="blog-is-private-input")
+    label(class="form-check-label mb-5 bg-color-inherit" for="blog-is-private-input") 비공개
+
+    h4 &lt;Blog Poster /&gt;
+    #editor
+    #blog-submit-bt
+      button(type="submit" class="btn btn-dark") 업로드
+
+block script
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.23.0/axios.min.js" integrity="sha512-Idr7xVNnMWCsgBQscTSCivBNWWH30oo/tzYORviOCrLKmBaRxRflm2miNhTFJNVmXvCtzgms5nlJF4az2hiGnA==" crossorigin="anonymous" referrerpolicy="no-referrer")
+  script(src="https://uicdn.toast.com/editor/3.1.0/toastui-editor-all.min.js")
+  script(src="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight-all.min.js")
+  script(src="/static/js/blog-upload.js")

@@ -1,4 +1,31 @@
 extends ../layout/base
 
+block style
+  link(rel="stylesheet" href="https://uicdn.toast.com/editor/3.1.0/toastui-editor.min.css")
+  link(rel="stylesheet" href="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.css")
+  link(rel="stylesheet" href="/static/css/code.css")
+  link(rel="stylesheet" href="/static/css/pages/blog.css")
+
 block main
-  h1 blog
+  h1#title=title
+  p#updated-at 2021년 10월 18일
+  #viewer
+
+block script
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.23.0/axios.min.js" integrity="sha512-Idr7xVNnMWCsgBQscTSCivBNWWH30oo/tzYORviOCrLKmBaRxRflm2miNhTFJNVmXvCtzgms5nlJF4az2hiGnA==" crossorigin="anonymous" referrerpolicy="no-referrer")
+  script(src="https://uicdn.toast.com/editor/3.1.0/toastui-editor-all.min.js")
+  script(src="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight-all.min.js")
+  script.
+    const Viewer = toastui.Editor
+    const { codeSyntaxHighlight } = Viewer.plugin
+    const viewer = Viewer.factory({
+      el: document.querySelector('#viewer'),
+      height: '100%',
+      initialValue: !{JSON.stringify(contents)},
+      plugins: [[codeSyntaxHighlight, { highlighter: Prism }]],
+      usageStatistics: false,
+      viewer: true,
+    })
+    console.log(viewer)
+
+

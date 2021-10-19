@@ -1,4 +1,188 @@
+@font-face {
+  font-family: 'notosans_regular';
+  src: url('../fonts/NotoSansKR-Regular.woff') format('embedded-opentype'),
+    url('../fonts/NotoSansKR-Regular.woff') format('woff'),
+    url('../fonts/NotoSansKR-Regular.woff') format('ttf'),
+    url('../fonts/NotoSansKR-Regular.woff') format('truetype'),
+    url('../fonts/NotoSansKR-Regular.woff') format('svg');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'code';
+  src: url('../fonts/Code.woff') format('embedded-opentype'),
+    url('../fonts/Code.woff') format('woff'),
+    url('../fonts/Code.woff') format('ttf'),
+    url('../fonts/Code.woff') format('truetype'),
+    url('../fonts/Code.woff') format('svg');
+  font-display: swap;
+}
+
+:root {
+  --font-notosans-regular: 'notosans_regular';
+  --font-code: 'code';
+  --break-point: 768px;
+  /* dark mode */
+  --bg-dark: rgb(31, 35, 41);
+  --color-big-dark: #f8f9fa;
+  --color-dark: #adbac7;
+  --bg-code-dark: rgb(40, 45, 52);
+  /* light mode */
+  --bg-light: #f8f9fa;
+  --color-light: rgb(33, 37, 41);
+}
+
+* {
+  font-family: var(--font-notosans-regular);
+  word-break: break-all;
+}
+
 body {
-  background-color: azure;
-  color: black;
+  background-color: var(--bg-dark);
+  max-width: var(--break-point);
+  margin: 0 auto;
+  color: var(--color-big-dark);
+}
+
+input:focus {
+  outline: none;
+}
+
+button:focus {
+  cursor: pointer;
+  outline: none;
+}
+
+textarea:focus {
+  outline: 0;
+}
+
+.bg-color-inherit {
+  background-color: inherit;
+  color: var(--color-dark);
+}
+
+.bg-color-inherit:focus {
+  background-color: inherit;
+  color: var(--color-dark);
+}
+
+#wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding-top: 20px;
+  padding-bottom: 10px;
+}
+
+#logout-form {
+  margin-top: 13px;
+  text-align: end;
+}
+
+/* main */
+#wrapper > main {
+  /* overflow: auto; 스크롤을 내려도 footer가 붙어있음 */
+  flex: 1 auto;
+  margin-top: 60px;
+}
+
+/* header */
+#logo {
+  font-family: var(--font-code);
+  font-size: 28px;
+  /* font-weight: bolder; */
+  cursor: pointer;
+}
+
+#header_form {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+#header_form > input {
+  font-family: var(--font-code);
+  color: var(--color-dark);
+  background-color: inherit;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 25px;
+  padding: 0 3px;
+  margin: 0;
+  border: 1px solid var(--color-dark);
+  border-top-width: 0;
+  border-right-width: 0;
+  border-left-width: 0;
+  padding-left: 7px;
+}
+
+#header_form > button {
+  background: inherit;
+  border: 0;
+  text-align: center;
+  text-justify: center;
+}
+
+#header_form > button > svg {
+  color: var(--color-dark);
+}
+
+@media screen and (max-width: 576px) {
+  #logo {
+    font-size: 22px;
+  }
+
+  #header_form > input {
+    display: none;
+    width: 160px;
+  }
+
+  #header_form > input::placeholder {
+    font-size: 13px;
+  }
+
+  #header_form > button {
+    padding-right: 0;
+    height: 19px;
+  }
+
+  #header_form > button > svg {
+    height: 15px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  #header_form > input {
+    width: 100px;
+  }
+}
+
+/* footer */
+footer {
+  display: flex;
+  justify-content: center;
+}
+#footer_info {
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+/* page animation */
+@keyframes fade-in-out {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+body {
+  animation-duration: 1s;
+  animation-name: fade-in-out;
 }

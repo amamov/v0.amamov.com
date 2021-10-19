@@ -1,4 +1,8 @@
-import { ExecutionContext, Injectable } from '@nestjs/common'
+import {
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 
 @Injectable()
@@ -8,7 +12,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   }
   handleRequest(err, user, info) {
     if (err || !user) {
-      // throw err || new UnauthorizedException('인증 문제가 있습니다.');
+      // throw err || new UnauthorizedException('인증 문제가 있습니다.')
     }
     return user
   }

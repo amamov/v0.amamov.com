@@ -1,0 +1,22 @@
+@import url('/static/css/editor.css');
+
+#title {
+  font-family: var(--font-code);
+  font-size: 48px;
+  margin-bottom: 32px;
+}
+
+#updated-at {
+  font-size: 16px;
+  color: var(--color-dark);
+  opacity: 0.8;
+}
+
+@media screen and (max-width: 768px) {
+  #title {
+    font-size: 36px;
+  }
+  #updated-at {
+    font-size: 14px;
+  }
+}
