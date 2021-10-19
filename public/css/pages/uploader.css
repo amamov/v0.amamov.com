@@ -1,14 +1,15 @@
+@import url('/static/css/editor.css');
+
 body {
   max-width: 793px; /* 768 + 25 */
 }
 
-h1 {
-  border-bottom: 1px solid #dbdbdb !important;
+#blog-submit-bt {
+  display: flex;
+  justify-content: end;
 }
 
-h2 {
-  border-bottom: 0 !important;
-}
-
-#submit_bt {
+#blog-submit-bt > button {
+  width: 150px;
+  margin-bottom: 100px;
 }

@@ -7,7 +7,6 @@ import { AppController } from './app.controller'
 import { UserEntity } from './users/users.entity'
 import { UsersModule } from './users/users.module'
 import { TagsModule } from './tags/tags.module'
-import { UploadsModule } from './uploads/uploads.module'
 import { ContactsModule } from './contacts/contacts.module'
 import { BlogsModule } from './blogs/blogs.module'
 
@@ -53,7 +52,6 @@ const typeOrmModuleOptions = {
     TypeOrmModule.forRootAsync(typeOrmModuleOptions),
     UsersModule,
     TagsModule,
-    UploadsModule,
     ContactsModule,
     BlogsModule,
   ],

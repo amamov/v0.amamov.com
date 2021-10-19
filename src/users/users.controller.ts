@@ -16,6 +16,7 @@ import { JwtAuthGuard } from './jwt/jwt.guard'
 import { UsersService } from './users.service'
 import { UserLogInDto } from './dtos/user-login.dto'
 import { UserDto } from './dtos/user.dto'
+import { UserRegisterDto } from './dtos/user-register.dto'
 
 @Controller()
 export class UsersController {
@@ -23,10 +24,10 @@ export class UsersController {
 
   constructor(private readonly usersService: UsersService) {}
 
-  // @Post('users')
-  // async signUp(@Body() body: UserRegisterDto) {
-  //   return this.usersService.registerUser(body)
-  // }
+  @Post('users')
+  async signUp(@Body() body: UserRegisterDto) {
+    return this.usersService.registerUser(body)
+  }
 
   @Get('login')
   @UseGuards(JwtAuthGuard)

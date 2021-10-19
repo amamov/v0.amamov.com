@@ -13,9 +13,16 @@ html(lang="en")
   body 
     div(class="container" id="wrapper")
       include header
+      if hasPermission
+        section(class="row")
+          form(class="col" action='/logout' method='GET' id="logout-form")
+            button(type="button", onclick="location.href='/uploads';", class="btn btn-dark mr-2") Uploads
+            button(type="submit", id="logout-bt", class="btn btn-dark") Logout
+
       main
         block main
-      include footer
+      footer
+        #footer_info Copyright © 2021 YOON SANG SEOK. All Rights Reserved.
     //- bootstrap
     script(src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous") 
     //- bootstrap

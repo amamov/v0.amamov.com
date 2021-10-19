@@ -1,5 +1,18 @@
 extends ../layout/base
 
+block style
+  style.
+    #error-section {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 80%;
+    }
+
 block main
-  h1=message
+  section(id="error-section")
+    h3 Something wrong... 🤔
+    h4=message
 

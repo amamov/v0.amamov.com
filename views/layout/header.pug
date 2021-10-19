@@ -1,9 +1,9 @@
-link(rel="stylesheet", href="/static/css/layout/header.css")
 
 header(class="row")
-  div(class="col align-self-start") 
+  div(class="col") 
     span(id="logo") amamov.com
-  form(class="col-3 align-self-end" id="header_form" action='/' method='GET')
+
+  form(class="col-3" id="header_form" action='/' method='GET')
     input(type=search, placeholder="Search", name='q', id="search_input")
     button(type=submit, id="search_bt") 
       svg(xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16")

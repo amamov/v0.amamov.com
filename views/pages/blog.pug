@@ -1,14 +1,15 @@
 extends ../layout/base
 
 block style
-  link(rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css")
-  link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css")
+  link(rel="stylesheet" href="https://uicdn.toast.com/editor/3.1.0/toastui-editor.min.css")
   link(rel="stylesheet" href="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.css")
-  link(rel="stylesheet" href="/static/css/pages/uploader.css")
+  link(rel="stylesheet" href="/static/css/code.css")
+  link(rel="stylesheet" href="/static/css/pages/blog.css")
 
 block main
+  h1#title=title
+  p#updated-at 2021년 10월 18일
   #viewer
-
 
 block script
   script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.23.0/axios.min.js" integrity="sha512-Idr7xVNnMWCsgBQscTSCivBNWWH30oo/tzYORviOCrLKmBaRxRflm2miNhTFJNVmXvCtzgms5nlJF4az2hiGnA==" crossorigin="anonymous" referrerpolicy="no-referrer")
@@ -17,50 +18,14 @@ block script
   script.
     const Viewer = toastui.Editor
     const { codeSyntaxHighlight } = Viewer.plugin
-    console.log(Viewer)
-    const contents = `<h1>header1</h1>
-      <h2>header2</h2>
-      <h3>header3</h3>
-      <blockquote>
-      <p>qqq qqq qqq qqq qqq qqq</p>
-      </blockquote>
-      <p>contentscontentscontentscontentscontentscontents<br>
-      contentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontents</p>
-      <pre class="lang-python"><code data-language="python"><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"fuck"</span><span class="token punctuation">)</span>
-      </code></pre>
-      <iframe src="https://thumbs.gfycat.com/TerribleRashJaguar-mobile.mp4"></iframe>
-      <p><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVM9suA3y0H3LqyZ8e878_xvDEVfV4mlJH-A&amp;usqp=CAU" alt="image" /></p>`
-    console.log(contents)
     const viewer = Viewer.factory({
       el: document.querySelector('#viewer'),
       height: '100%',
-      initialValue: contents,
+      initialValue: !{JSON.stringify(contents)},
       plugins: [[codeSyntaxHighlight, { highlighter: Prism }]],
       usageStatistics: false,
       viewer: true,
-      customHTMLRenderer: {
-        htmlBlock: {
-          iframe(node) {
-            return [
-              {
-                type: 'openTag',
-                tagName: 'iframe',
-                outerNewLine: true,
-                attributes: node.attrs,
-              },
-              { type: 'html', content: node.childrenHTML },
-              { type: 'closeTag', tagName: 'iframe', outerNewLine: true },
-            ]
-          },
-        htmlInline: {
-          big(node, { entering }) {
-            return entering
-              ? { type: 'openTag', tagName: 'big', attributes: node.attrs }
-              : { type: 'closeTag', tagName: 'big' };
-          },
-        },
-      },
-      },
     })
+    console.log(viewer)
 
 

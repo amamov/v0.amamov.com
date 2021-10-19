@@ -1,0 +1,169 @@
+#viewer,
+#editor {
+  margin-bottom: 20px;
+}
+
+/** color and border **/
+.toastui-editor-contents p {
+  color: var(--color-dark) !important;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: var(--color-dark) !important;
+  border-bottom: 0 !important;
+}
+
+hr {
+  border-top: 1px solid var(--color-dark) !important;
+}
+
+.ProseMirror {
+  color: var(--color-dark) !important;
+}
+
+.toastui-editor-md-code-block-line-background {
+  background-color: inherit !important;
+}
+
+.toastui-editor-ww-container,
+.tab-item,
+.toastui-editor-mode-switch,
+.toastui-editor-md-tab-container,
+.toastui-editor-tabs,
+.toastui-editor-defaultUI-toolbar,
+.toastui-editor-popup {
+  background-color: inherit !important;
+}
+
+.toastui-editor-tabs {
+  margin: 0 auto !important;
+  padding: 0 10px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.toastui-editor-tabs .tab-item {
+  margin-top: 0 !important;
+  border-bottom-right-radius: 4px !important;
+  border-bottom-left-radius: 4px !important;
+}
+
+.toastui-editor-mode-switch {
+  padding: 0 !important;
+}
+
+.toastui-editor-mode-switch .tab-item {
+  border-top: 0 !important;
+  border-top: 0 !important;
+  border-bottom: 0 !important;
+  border-right: 0 !important;
+  border-radius: 0 !important;
+  height: 100% !important;
+}
+
+#editor
+  div.toastui-editor-toolbar
+  > div.toastui-editor-popup.toastui-editor-popup-add-link
+  > div
+  > div
+  > label,
+#editor
+  div.toastui-editor-toolbar
+  > div.toastui-editor-popup.toastui-editor-popup-add-image
+  > div
+  > div
+  label {
+  color: var(--color-dark) !important;
+}
+
+#editor
+  div.toastui-editor-toolbar
+  > div.toastui-editor-popup.toastui-editor-popup-add-image
+  > div
+  > div
+  > div.toastui-editor-tabs
+  > div.tab-item.active {
+  color: var(--color-dark) !important;
+  border-bottom-color: var(--color-dark) !important;
+  opacity: 1;
+}
+
+#editor
+  div.toastui-editor-toolbar
+  > div.toastui-editor-popup.toastui-editor-popup-add-image
+  > div
+  > div
+  > div.toastui-editor-tabs
+  > div.tab-item {
+  color: var(--color-dark) !important;
+  border-bottom-color: var(--color-dark) !important;
+  opacity: 0.5;
+}
+
+.toastui-editor-ok-button {
+  background-color: var(--color-dark) !important;
+  color: var(--bg-dark) !important;
+}
+
+/** font-size **/
+
+.toastui-editor-contents h1 {
+  font-size: 40px;
+  margin: 26.5px 0 16px 0;
+}
+
+.toastui-editor-contents h2 {
+  font-size: 32px;
+  margin: 26.5px 0 16px 0;
+}
+
+.toastui-editor-contents h3 {
+  font-size: 24px;
+  margin: 24px 0 16px 0;
+}
+
+.toastui-editor-contents h4,
+.toastui-editor-contents p {
+  font-size: 18px;
+  line-height: 30.6px;
+}
+
+.toastui-editor-contents blockquote {
+  background-color: var(--bg-code-dark);
+  box-sizing: border-box !important;
+  height: 62px;
+  margin: 32px 0;
+  padding: 16px 16px 16px 32px;
+}
+
+@media screen and (max-width: 768px) {
+  .toastui-editor-contents h1 {
+    font-size: 36px;
+  }
+
+  .toastui-editor-contents h2 {
+    font-size: 28px;
+  }
+
+  .toastui-editor-contents h3 {
+    font-size: 20px;
+  }
+
+  .toastui-editor-contents h4,
+  .toastui-editor-contents p {
+    font-size: 16px;
+    line-height: 27.2px;
+  }
+
+  .toastui-editor-contents blockquote {
+    height: 59px;
+    margin: 32px 0;
+    padding: 16px 16px 16px 32px;
+  }
+}
