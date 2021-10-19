@@ -1,22 +1,9 @@
 'use-strict'
 
+//* toast-ui editor */
 const Editor = toastui.Editor
 const { codeSyntaxHighlight } = Editor.plugin
-const blogUploadForm = document.getElementById('blog-upload-form'),
-  blogTitleInput = document.getElementById('blog-title-input'),
-  blogThumbnailInput = document.getElementById('blog-thumbnail-input'),
-  blogThumbnailPreview = document.getElementById('blog-thumbnail-preview'),
-  blogTagsInput = document.getElementById('blog-tags-input'),
-  blogDescriptionInput = document.getElementById('blog-description-input'),
-  blogIsPrivateInput = document.getElementById('blog-is-private-input')
-
-let thumbnailFile,
-  title,
-  description,
-  isPrivate = false,
-  tags = []
-
-const uploadImage = async (blob) => {
+const editorUploadImage = async (blob) => {
   try {
     let form = new FormData()
     form.append('image', blob)
@@ -27,7 +14,6 @@ const uploadImage = async (blob) => {
     throw new Error('Server or Network error')
   }
 }
-
 const editor = new Editor({
   el: document.querySelector('#editor'),
   height: '80vh',
@@ -40,13 +26,54 @@ const editor = new Editor({
   hooks: {
     addImageBlobHook: async (blob, callback) => {
       // blob : Blob | File
-      const uploadedImageURL = await uploadImage(blob)
+      const uploadedImageURL = await editorUploadImage(blob)
       callback(uploadedImageURL, blob.name) // url, altText
       return false
     },
   },
+  customHTMLRenderer: {
+    htmlBlock: {
+      iframe(node) {
+        return [
+          {
+            type: 'openTag',
+            tagName: 'iframe',
+            outerNewLine: true,
+            attributes: node.attrs,
+          },
+          { type: 'html', content: node.childrenHTML },
+          { type: 'closeTag', tagName: 'iframe', outerNewLine: true },
+        ]
+      },
+    },
+  },
+  customHTMLSanitizer: (html) => {
+    return DOMPurify.sanitize(html, {
+      ADD_TAGS: ['iframe'],
+      ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling'],
+    })
+  },
 })
 
+//****************************************************************************/
+
+//* document element */
+const blogUploadForm = document.getElementById('blog-upload-form'),
+  blogTitleInput = document.getElementById('blog-title-input'),
+  blogThumbnailInput = document.getElementById('blog-thumbnail-input'),
+  blogThumbnailPreview = document.getElementById('blog-thumbnail-preview'),
+  blogTagsInput = document.getElementById('blog-tags-input'),
+  blogDescriptionInput = document.getElementById('blog-description-input'),
+  blogIsPrivateInput = document.getElementById('blog-is-private-input')
+
+//* form data var */
+let thumbnailFile,
+  title,
+  description,
+  isPrivate = false,
+  tags = []
+
+//* form change event handler */
 const handleBlogThumbnailChange = ({ target: { files } }) => {
   // input으로 입력받은 파일을 FileReader로 URL로 읽는다.
   // console.log(files);
@@ -86,22 +113,12 @@ const handleBlogTitleChange = ({ target: { value } }) => {
   title = value
 }
 
-const uploadBlog = async (formData) => {
-  for (const form of formData.entries()) console.log(form)
-  try {
-    await axios.post('/blog', formData)
-    alert('업로드 성공!')
-    location.href = '/'
-  } catch (error) {
-    if (error?.response?.data?.message) alert(error.response.data.message)
-    else alert(error)
-  }
-}
-
+//* form submit event handler */
 const handleBlogUploadSubmit = async (event) => {
   event.preventDefault()
   if (window.confirm('업로드 하시겠습니까?')) {
     const html = editor.getHTML()
+    console.log(html)
     if (!html) {
       alert('글을 작성해주세요.')
       return
@@ -113,7 +130,17 @@ const handleBlogUploadSubmit = async (event) => {
     formData.append('isPrivate', isPrivate)
     formData.append('thumbnail', thumbnailFile)
     formData.append('contents', html)
-    await uploadBlog(formData)
+    await (async (formData) => {
+      for (const form of formData.entries()) console.log(form)
+      try {
+        await axios.post('/blog', formData)
+        alert('업로드 성공!')
+        // location.href = '/'
+      } catch (error) {
+        if (error?.response?.data?.message) alert(error.response.data.message)
+        else alert(error)
+      }
+    })(formData)
   }
 }
 
@@ -127,14 +154,3 @@ function init() {
 }
 
 init()
-
-function getCookie(name) {
-  let matches = document.cookie.match(
-    new RegExp(
-      '(?:^|; )' +
-        name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') +
-        '=([^;]*)',
-    ),
-  )
-  return matches ? decodeURIComponent(matches[1]) : undefined
-}
