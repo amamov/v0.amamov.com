@@ -12,10 +12,12 @@ block main
   #viewer
 
 block script
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.3/purify.min.js" integrity="sha512-gtcrasYnyeB27+IejClswFlb/eggt+khRr+lLAeNcgg5x2ijlWaiBOPXZkwivNj15LaE6s9CzV57hsoTPrQ5xg==" crossorigin="anonymous" referrerpolicy="no-referrer")
   script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.23.0/axios.min.js" integrity="sha512-Idr7xVNnMWCsgBQscTSCivBNWWH30oo/tzYORviOCrLKmBaRxRflm2miNhTFJNVmXvCtzgms5nlJF4az2hiGnA==" crossorigin="anonymous" referrerpolicy="no-referrer")
   script(src="https://uicdn.toast.com/editor/3.1.0/toastui-editor-all.min.js")
   script(src="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight-all.min.js")
   script.
+
     const Viewer = toastui.Editor
     const { codeSyntaxHighlight } = Viewer.plugin
     const viewer = Viewer.factory({
@@ -25,6 +27,12 @@ block script
       plugins: [[codeSyntaxHighlight, { highlighter: Prism }]],
       usageStatistics: false,
       viewer: true,
+      customHTMLSanitizer: (html) => {
+        return DOMPurify.sanitize(html, {
+          ADD_TAGS: ['iframe'],
+          ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling'],
+        })
+      },
     })
     console.log(viewer)
 
