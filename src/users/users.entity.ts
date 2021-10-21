@@ -6,7 +6,8 @@ import {
   IsString,
 } from 'class-validator'
 import { CommonEntity } from '../common/entities/common.entity' // ormconfig.json에서 파싱 가능하도록 상대 경로로 지정
-import { Column, Entity, Index } from 'typeorm'
+import { Column, Entity, Index, OneToMany } from 'typeorm'
+import { BlogEntity } from '../blogs/blogs.entity'
 
 @Index('email', ['email'], { unique: true })
 @Entity({
@@ -37,13 +38,20 @@ export class UserEntity extends CommonEntity {
   @Column({
     type: 'varchar',
     nullable: true,
-    default:
-      'https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg',
   })
-  thumbnailUrl?: string
+  thumbnail?: string
+  // https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg
 
   @IsString()
   @IsOptional()
   @Column({ type: 'varchar', nullable: true })
+  simpleBio?: string
+
+  @IsOptional()
+  @Column({ type: 'text', nullable: true })
   bio?: string
+
+  // 가상의 컬럼
+  @OneToMany(() => BlogEntity, (blog: BlogEntity) => blog.author)
+  blogs: BlogEntity[]
 }
