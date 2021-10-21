@@ -14,9 +14,9 @@ import { Response } from 'express'
 import { CurrentUser } from '@common/decorators/current-user.decorator'
 import { JwtAuthGuard } from './jwt/jwt.guard'
 import { UsersService } from './users.service'
-import { UserLogInDto } from './dtos/user-login.dto'
-import { UserDto } from './dtos/user.dto'
-import { UserRegisterDto } from './dtos/user-register.dto'
+import { UserLogInDTO } from './dtos/user-login.dto'
+import { UserDTO } from './dtos/user.dto'
+import { UserRegisterDTO } from './dtos/user-register.dto'
 
 @Controller()
 export class UsersController {
@@ -25,7 +25,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post('users')
-  async signUp(@Body() body: UserRegisterDto) {
+  async signUp(@Body() body: UserRegisterDTO) {
     return this.usersService.registerUser(body)
   }
 
@@ -33,7 +33,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Render('pages/login')
   async getLogIn(
-    @CurrentUser() currentUser: UserDto,
+    @CurrentUser() currentUser: UserDTO,
     @Res({ passthrough: true }) response: Response,
   ) {
     this.logger.debug(currentUser)
@@ -44,7 +44,7 @@ export class UsersController {
   @Post('login')
   @Redirect('/')
   async logIn(
-    @Body() body: UserLogInDto,
+    @Body() body: UserLogInDTO,
     @Res({ passthrough: true }) response: Response,
   ) {
     await this.usersService.logIn(body, response)

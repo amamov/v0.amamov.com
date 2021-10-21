@@ -10,9 +10,9 @@ import { JwtService } from '@nestjs/jwt'
 import { Repository } from 'typeorm'
 import { UserEntity } from './users.entity'
 import * as bcrypt from 'bcrypt'
-import { UserDto } from './dtos/user.dto'
-import { UserLogInDto } from './dtos/user-login.dto'
-import { UserRegisterDto } from './dtos/user-register.dto'
+import { UserDTO } from './dtos/user.dto'
+import { UserLogInDTO } from './dtos/user-login.dto'
+import { UserRegisterDTO } from './dtos/user-register.dto'
 import { ConfigService } from '@nestjs/config'
 
 @Injectable()
@@ -26,7 +26,7 @@ export class UsersService {
     private readonly configService: ConfigService,
   ) {}
 
-  async registerUser(body: UserRegisterDto): Promise<UserDto> {
+  async registerUser(body: UserRegisterDTO): Promise<UserDTO> {
     const { email, password } = body
     this.logger.debug('hello')
     const user = await this.usersRepository.findOne({ email })
@@ -40,7 +40,7 @@ export class UsersService {
     })
   }
 
-  async logIn(body: UserLogInDto, response: Response): Promise<UserDto> {
+  async logIn(body: UserLogInDTO, response: Response): Promise<UserDTO> {
     const { email, password } = body
     const user = await this.usersRepository.findOne({ email })
 
@@ -62,9 +62,11 @@ export class UsersService {
     }
   }
 
-  async findUserById(id: string): Promise<UserDto> {
-    const user = await this.usersRepository.findOne(id)
-    this.logger.log(user)
-    return user
+  async findUserById(id: string) {
+    try {
+      return await this.usersRepository.findOne(id)
+    } catch (error) {
+      throw new BadRequestException('해당하는 사용자를 찾을 수 없습니다.')
+    }
   }
 }
