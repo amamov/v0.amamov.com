@@ -1,7 +1,10 @@
 require('dotenv/config')
 /* eslint @typescript-eslint/no-var-requires: 0 */
 const { UserEntity } = require('./src/users/users.entity')
-/* eslint @typescript-eslint/no-var-requires: 0 */
+const { BlogEntity } = require('./src/blogs/blogs.entity')
+const { BlogImageEntity } = require('./src/blogs/blog-images.entity')
+const { TagEntity } = require('./src/tags/tags.entity')
+const { VisitorEntity } = require('./src/visitors/visitors.entity')
 const { SnakeNamingStrategy } = require('typeorm-naming-strategies')
 
 module.exports = {
@@ -16,7 +19,7 @@ module.exports = {
   keepConnectionAlive: true,
   logging: true,
   namingStrategy: new SnakeNamingStrategy(),
-  entities: [UserEntity],
+  entities: [UserEntity, BlogEntity, BlogImageEntity, TagEntity, VisitorEntity],
   // entities: ['src/**/*.entity.ts'],
   migrations: ['migrations/**/*.ts'],
   cli: { migrationsDir: 'migrations' },

@@ -7,8 +7,12 @@ import { AppController } from './app.controller'
 import { UserEntity } from './users/users.entity'
 import { UsersModule } from './users/users.module'
 import { TagsModule } from './tags/tags.module'
-import { ContactsModule } from './contacts/contacts.module'
 import { BlogsModule } from './blogs/blogs.module'
+import { VisitorsModule } from './visitors/visitors.module'
+import { BlogEntity } from './blogs/blogs.entity'
+import { BlogImageEntity } from './blogs/blog-images.entity'
+import { TagEntity } from './tags/tags.entity'
+import { VisitorEntity } from './visitors/visitors.entity'
 
 const typeOrmModuleOptions = {
   useFactory: async (
@@ -21,7 +25,13 @@ const typeOrmModuleOptions = {
     username: configService.get('DB_USERNAME'),
     password: configService.get('DB_PASSWORD'),
     database: configService.get('DB_NAME'),
-    entities: [UserEntity],
+    entities: [
+      UserEntity,
+      BlogEntity,
+      BlogImageEntity,
+      TagEntity,
+      VisitorEntity,
+    ],
     synchronize: true,
     autoLoadEntities: true,
     logging: true,
@@ -52,8 +62,8 @@ const typeOrmModuleOptions = {
     TypeOrmModule.forRootAsync(typeOrmModuleOptions),
     UsersModule,
     TagsModule,
-    ContactsModule,
     BlogsModule,
+    VisitorsModule,
   ],
   controllers: [AppController],
 })
