@@ -19,27 +19,31 @@ import { BlogImageEntity } from './blog-images.entity'
 })
 export class BlogEntity extends CommonEntity {
   @IsString()
-  @Column({ type: 'varchar', unique: true, nullable: false })
+  @Column({ type: 'varchar', unique: true, nullable: true })
   title: string
 
   @IsString()
-  @Column({ type: 'varchar', nullable: false })
+  @Column({ type: 'varchar', unique: true, nullable: true })
+  slug: string
+
+  @IsString()
+  @Column({ type: 'varchar', nullable: true })
   thumbnail: string
 
   @IsString()
-  @Column({ type: 'varchar', nullable: false })
+  @Column({ type: 'varchar', nullable: true })
   description: string
 
   @IsString()
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   contents: string
 
   @IsBoolean()
-  @Column({ type: 'boolean', nullable: true })
+  @Column({ type: 'boolean', default: false })
   isPrivate: boolean
 
   @IsBoolean()
-  @Column({ type: 'boolean', nullable: true })
+  @Column({ type: 'boolean', nullable: false, default: true })
   isTemporary: boolean
 
   @ManyToOne(() => UserEntity, (author: UserEntity) => author.blogs, {
@@ -58,6 +62,8 @@ export class BlogEntity extends CommonEntity {
   @OneToMany(
     () => BlogImageEntity,
     (blogImage: BlogImageEntity) => blogImage.blog,
+    { cascade: true }, // 새 BLOG_IMAGE가 변화하고 BLOG가 저장되면 새 BLOG_IMAGE도 DB에 저장되어야 함
+    // { cascade : ["insert", "update", "remove", "soft-remove", "recover"] }
   )
   images: BlogEntity[]
 
@@ -78,6 +84,8 @@ export class BlogEntity extends CommonEntity {
   })
   tags: TagEntity[]
 
-  @OneToMany(() => VisitorEntity, (visitor: VisitorEntity) => visitor.blog)
+  @OneToMany(() => VisitorEntity, (visitor: VisitorEntity) => visitor.blog, {
+    cascade: true,
+  })
   visitors: VisitorEntity[]
 }

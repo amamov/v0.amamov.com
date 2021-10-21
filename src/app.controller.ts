@@ -1,15 +1,7 @@
 import { CurrentUser } from '@common/decorators/current-user.decorator'
-import { OnlyAdminInterceptor } from '@common/interceptors/only-admin.interceptor'
-import {
-  BadRequestException,
-  Controller,
-  Get,
-  Logger,
-  Render,
-  UseGuards,
-  UseInterceptors,
-} from '@nestjs/common'
-import { UserDto } from './users/dtos/user.dto'
+import { Controller, Get, Logger, Render, Res, UseGuards } from '@nestjs/common'
+import { Response } from 'express'
+import { UserDTO } from './users/dtos/user.dto'
 import { JwtAuthGuard } from './users/jwt/jwt.guard'
 
 @Controller()
@@ -19,7 +11,7 @@ export class AppController {
   @Get()
   @UseGuards(JwtAuthGuard)
   @Render('pages/home')
-  home(@CurrentUser() currentUser: UserDto | null) {
+  getHomePage(@CurrentUser() currentUser: UserDTO | null) {
     let hasPermission = false
     this.logger.debug(currentUser)
     if (currentUser && currentUser.isAdmin) hasPermission = true
@@ -27,16 +19,7 @@ export class AppController {
   }
 
   @Get('uploads')
-  @UseGuards(JwtAuthGuard)
-  @UseInterceptors(new OnlyAdminInterceptor())
-  @Render('pages/uploader')
-  getUploadPage() {
-    return { title: 'amamov | upload' }
-  }
-
-  @Get('test')
-  @Render('pages/home')
-  test() {
-    throw new BadRequestException('fuck')
+  redirectUpload(@Res() res: Response) {
+    res.redirect('/blog/v1/uploads')
   }
 }

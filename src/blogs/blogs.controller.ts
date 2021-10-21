@@ -1,7 +1,5 @@
-import { CurrentUser } from '@common/decorators/current-user.decorator'
-import { HttpApiExceptionFilter } from '@common/exceptions/http-api-exception.filter'
-import { OnlyAdminInterceptor } from '@common/interceptors/only-admin.interceptor'
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -15,55 +13,190 @@ import {
   UseInterceptors,
 } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
-import { UserDto } from 'src/users/dtos/user.dto'
+import { InjectRepository } from '@nestjs/typeorm'
+import { CurrentUser } from '@common/decorators/current-user.decorator'
+import { HttpApiExceptionFilter } from '@common/exceptions/http-api-exception.filter'
+import { OnlyAdminInterceptor } from '@common/interceptors/only-admin.interceptor'
+import { AwsService } from '@common/services/aws.service'
+import { TagEntity } from 'src/tags/tags.entity'
+import { UserDTO } from 'src/users/dtos/user.dto'
 import { JwtAuthGuard } from 'src/users/jwt/jwt.guard'
+import { UsersService } from 'src/users/users.service'
+import { Connection, Repository } from 'typeorm'
+import { BlogImageEntity } from './blog-images.entity'
+import { BlogUploadBodyPipe } from './blog-upload-body.pipe'
+import { BlogEntity } from './blogs.entity'
+import { BlogUploadDTO } from './dtos/blog-upload.dto'
 
 @Controller('blog')
 export class BlogsController {
   private logger = new Logger(BlogsController.name)
 
-  //   constructor() {}
+  constructor(
+    private readonly ormConnection: Connection,
+    @InjectRepository(BlogEntity)
+    private readonly blogsRepository: Repository<BlogEntity>,
+    @InjectRepository(BlogImageEntity)
+    private readonly blogImagesRepository: Repository<BlogImageEntity>,
+    private readonly usersServie: UsersService,
+    private readonly awsService: AwsService,
+  ) {}
 
+  @Get('v1/uploads')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(new OnlyAdminInterceptor())
+  @Render('pages/uploader')
+  async getBlogUploadPage() {
+    const context = { title: 'amamov | upload', blogId: '' }
+    try {
+      const existedBlog = await this.blogsRepository.findOne(
+        {
+          isTemporary: true,
+        },
+        { relations: ['images'] },
+      )
+      if (existedBlog) {
+        context.blogId = existedBlog.id
+        existedBlog.images.forEach(
+          async (image) => await this.blogImagesRepository.delete(image.id),
+        )
+      } else {
+        const blog = this.blogsRepository.create({
+          isTemporary: true,
+          isPrivate: true,
+        })
+        await this.blogsRepository.save(blog)
+        context.blogId = blog.id
+      }
+    } catch (error) {
+      throw new BadRequestException(error)
+    }
+    this.logger.debug(context)
+  }
+
+  // TODO : VISITOR
   @Get(':slug')
   @Render('pages/blog')
-  blog(@Param('slug') slug: string) {
+  async getBlogDetailPage(@Param('slug') slug: string) {
     this.logger.debug(slug)
-    return {
-      title: 'amamov | blog',
-      contents: `<h1>header1</h1><h2>header2</h2><h3>header3</h3><blockquote><p>qqq qqq qqq qqq qqq qqq</p></blockquote>
-      <p>contentscontentscontentscontentscontentscontents<br>
-      contentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentsntentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscntentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscntentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscntentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscntentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscntentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentscontentsc</p>
-      <pre class="lang-python"><code data-language="python"><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"fuck"</span><span class="token punctuation">)</span>
-      </code></pre>
-      <iframe align="center" width="560" height="315" src="https://www.youtube.com/embed/w_95H0JRQOQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
-      `,
-    }
+
+    try {
+      const blog = await this.blogsRepository.findOne(
+        { slug },
+        { relations: ['tags'] },
+      )
+      return {
+        title: 'amamov | blog',
+        contents: blog.contents,
+        blogTitle: blog.title,
+        createdAt: blog.createdAt,
+        updatedAt: blog.updatedAt,
+        isPrivate: blog.isPrivate,
+        tags: blog.tags.map((tag) => tag.name),
+      }
+    } catch (error) {}
   }
+
+  //************************ API ************************//
 
   @Post()
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(new OnlyAdminInterceptor(), FileInterceptor('thumbnail'))
   @UseFilters(new HttpApiExceptionFilter())
   async uploadBlog(
-    @CurrentUser() currentUser: UserDto,
-    @UploadedFile() file: Express.Multer.File,
-    @Body() body,
-  ) {
-    // TODO
-    this.logger.debug(currentUser.isAdmin)
-    this.logger.debug(file)
-    this.logger.debug(body)
+    @CurrentUser() currentUser: UserDTO,
+    @UploadedFile() thumbnailFile: Express.Multer.File,
+    @Body(new BlogUploadBodyPipe()) uploadData: BlogUploadDTO,
+  ): Promise<void> {
+    const queryRunner = this.ormConnection.createQueryRunner()
+    await queryRunner.connect()
+    await queryRunner.startTransaction()
+    const author = await this.usersServie.findUserById(currentUser.id)
+    try {
+      // Typeorm.feature([BlogEntity])의 커넥션으로 연결, 트랜젝션을 위한 queryRunner의 커넥션으로는 연결 안됨
+      // const blog = await this.blogsRepository.findOne({ isTemporary: true })
+      const blog = await queryRunner.manager
+        .getRepository(BlogEntity)
+        .findOne({ isTemporary: true })
+      blog.isTemporary = false
+      if (
+        await queryRunner.manager
+          .getRepository(BlogEntity)
+          .findOne({ title: uploadData.title })
+      ) {
+        throw new BadRequestException(
+          '해당하는 제목의 게시물은 이미 존재합니다.',
+        )
+      }
+      blog.title = uploadData.title
+      blog.contents = uploadData.contents
+      blog.description = uploadData.description
+      blog.isPrivate = uploadData.isPrivate as boolean
+      blog.author = author
+      const { key: thumbnail } = await this.awsService.uploadFileToS3(
+        `blog/${blog.id}`,
+        thumbnailFile,
+      )
+      blog.thumbnail = thumbnail
+      const slug = uploadData.title
+        .replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '')
+        .split(' ')
+        .filter((w) => w !== '')
+        .join('-')
+      if (await queryRunner.manager.getRepository(BlogEntity).findOne({ slug }))
+        blog.slug = `${slug}-${Math.floor(Math.random() * 1000)}`
+      else blog.slug = slug
+      const tagList = uploadData.tags
+        .replace(/[`~!@$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '')
+        .replace(/ /g, '')
+        .split('#')
+        .filter((w) => w !== '')
+      const tags: TagEntity[] = []
+      for (const tagName of tagList) {
+        const existedTag = await queryRunner.manager
+          .getRepository(TagEntity)
+          .findOne({ name: tagName })
+        if (existedTag) {
+          tags.push(existedTag)
+        } else {
+          const newTag = queryRunner.manager
+            .getRepository(TagEntity)
+            .create({ name: tagName })
+          tags.push(newTag)
+        }
+      }
+      blog.tags = tags
+      await queryRunner.manager.getRepository(BlogEntity).save(blog)
+      await queryRunner.commitTransaction()
+    } catch (error) {
+      await queryRunner.rollbackTransaction()
+      throw new BadRequestException(error)
+    } finally {
+      await queryRunner.release()
+    }
   }
 
-  @Post('image')
+  @Post('v1/image')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(new OnlyAdminInterceptor(), FileInterceptor('image'))
   @UseFilters(new HttpApiExceptionFilter())
-  async uploadBlogPostImage(
-    @CurrentUser() currentUser: UserDto,
-    @UploadedFile() file: Express.Multer.File,
-  ) {
-    // TODO
-    this.logger.debug(file)
+  async uploadBlogPostImage(@UploadedFile() imageFile: Express.Multer.File) {
+    try {
+      const currentBlog = await this.blogsRepository.findOne({
+        isTemporary: true,
+      })
+      const { key: image } = await this.awsService.uploadFileToS3(
+        `blog/${currentBlog.id}`,
+        imageFile,
+      )
+      const blogImage = this.blogImagesRepository.create({
+        blog: currentBlog,
+        image,
+      })
+      await this.blogImagesRepository.save(blogImage)
+      return { image: this.awsService.getAwsS3FileUrl(blogImage.image) }
+    } catch (error) {
+      throw new BadRequestException(error)
+    }
   }
 }

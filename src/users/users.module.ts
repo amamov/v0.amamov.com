@@ -19,5 +19,6 @@ import { UsersService } from './users.service'
   ],
   providers: [JwtStrategy, UsersService],
   controllers: [UsersController],
+  exports: [UsersService],
 })
 export class UsersModule {}

@@ -7,8 +7,7 @@ const editorUploadImage = async (blob) => {
   try {
     let form = new FormData()
     form.append('image', blob)
-    const response = await axios.post('blog/image', form)
-    console.log(response.data)
+    const response = await axios.post('/blog/v1/image', form)
     return response.data.image
   } catch (error) {
     throw new Error('Server or Network error')
@@ -71,7 +70,7 @@ let thumbnailFile,
   title,
   description,
   isPrivate = false,
-  tags = []
+  tags = ''
 
 //* form change event handler */
 const handleBlogThumbnailChange = ({ target: { files } }) => {
@@ -97,8 +96,7 @@ const handleBlogThumbnailChange = ({ target: { files } }) => {
 }
 
 const handleBlogTagsChange = ({ target: { value } }) => {
-  const tagsString = value
-  tags = ['python', 'javascript']
+  tags = value
 }
 
 const handleBlogDescriptionChange = ({ target: { value } }) => {
@@ -118,7 +116,6 @@ const handleBlogUploadSubmit = async (event) => {
   event.preventDefault()
   if (window.confirm('업로드 하시겠습니까?')) {
     const html = editor.getHTML()
-    console.log(html)
     if (!html) {
       alert('글을 작성해주세요.')
       return
@@ -131,7 +128,6 @@ const handleBlogUploadSubmit = async (event) => {
     formData.append('thumbnail', thumbnailFile)
     formData.append('contents', html)
     await (async (formData) => {
-      for (const form of formData.entries()) console.log(form)
       try {
         await axios.post('/blog', formData)
         alert('업로드 성공!')
