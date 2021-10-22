@@ -4,6 +4,7 @@ import {
   Controller,
   Get,
   Logger,
+  NotFoundException,
   Param,
   Post,
   Render,
@@ -27,6 +28,8 @@ import { BlogImageEntity } from './blog-images.entity'
 import { BlogUploadBodyPipe } from './blog-upload-body.pipe'
 import { BlogEntity } from './blogs.entity'
 import { BlogUploadDTO } from './dtos/blog-upload.dto'
+import { ClientIp } from '@common/decorators/client-real-ip.decorator'
+import { VisitorEntity } from 'src/visitors/visitors.entity'
 
 @Controller('blog')
 export class BlogsController {
@@ -34,6 +37,8 @@ export class BlogsController {
 
   constructor(
     private readonly ormConnection: Connection,
+    @InjectRepository(VisitorEntity)
+    private readonly visitorsRepository: Repository<VisitorEntity>,
     @InjectRepository(BlogEntity)
     private readonly blogsRepository: Repository<BlogEntity>,
     @InjectRepository(BlogImageEntity)
@@ -57,9 +62,14 @@ export class BlogsController {
       )
       if (existedBlog) {
         context.blogId = existedBlog.id
-        existedBlog.images.forEach(
-          async (image) => await this.blogImagesRepository.delete(image.id),
-        )
+        if (existedBlog.images.length > 0) {
+          existedBlog.images.forEach(async (imageEntity) => {
+            await Promise.all([
+              this.blogImagesRepository.delete(imageEntity.id),
+              this.awsService.deleteS3Object(imageEntity.image),
+            ])
+          })
+        }
       } else {
         const blog = this.blogsRepository.create({
           isTemporary: true,
@@ -77,14 +87,18 @@ export class BlogsController {
   // TODO : VISITOR
   @Get(':slug')
   @Render('pages/blog')
-  async getBlogDetailPage(@Param('slug') slug: string) {
-    this.logger.debug(slug)
-
+  async getBlogDetailPage(
+    @ClientIp() visitorIp: string,
+    @Param('slug') slug: string,
+  ) {
     try {
       const blog = await this.blogsRepository.findOne(
-        { slug },
+        { slug, isTemporary: false, isPrivate: false },
         { relations: ['tags'] },
       )
+      if (!blog) throw new Error('해당하는 로그를 찾을 수 없습니다.')
+      const visitor = this.visitorsRepository.create({ blog, ip: visitorIp })
+      await this.visitorsRepository.save(visitor)
       return {
         title: 'amamov | blog',
         contents: blog.contents,
@@ -94,7 +108,9 @@ export class BlogsController {
         isPrivate: blog.isPrivate,
         tags: blog.tags.map((tag) => tag.name),
       }
-    } catch (error) {}
+    } catch (error) {
+      throw new NotFoundException(error)
+    }
   }
 
   //************************ API ************************//

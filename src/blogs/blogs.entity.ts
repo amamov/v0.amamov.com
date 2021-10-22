@@ -65,7 +65,7 @@ export class BlogEntity extends CommonEntity {
     { cascade: true }, // 새 BLOG_IMAGE가 변화하고 BLOG가 저장되면 새 BLOG_IMAGE도 DB에 저장되어야 함
     // { cascade : ["insert", "update", "remove", "soft-remove", "recover"] }
   )
-  images: BlogEntity[]
+  images: BlogImageEntity[]
 
   @ManyToMany(() => TagEntity, (tag: TagEntity) => tag.blogs, {
     cascade: ['insert'], // 두개의 테이블 동시에 수정할때에는 cascade 옵션을 추가해주어야 한다.

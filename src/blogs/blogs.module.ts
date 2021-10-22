@@ -1,19 +1,23 @@
 import { AwsService } from '@common/services/aws.service'
-import { Module } from '@nestjs/common'
+import { forwardRef, Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { TagsModule } from 'src/tags/tags.module'
 import { UsersModule } from 'src/users/users.module'
+import { VisitorsModule } from 'src/visitors/visitors.module'
 import { BlogImageEntity } from './blog-images.entity'
 import { BlogsController } from './blogs.controller'
 import { BlogEntity } from './blogs.entity'
+import { BlogsService } from './blogs.service'
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([BlogEntity, BlogImageEntity]),
     UsersModule,
-    TagsModule,
+    VisitorsModule,
+    forwardRef(() => TagsModule),
   ],
-  providers: [AwsService],
+  providers: [AwsService, BlogsService],
   controllers: [BlogsController],
+  exports: [TypeOrmModule.forFeature([BlogEntity]), BlogsService],
 })
 export class BlogsModule {}
