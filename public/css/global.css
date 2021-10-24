@@ -21,6 +21,8 @@
 :root {
   --font-notosans-regular: 'notosans_regular';
   --font-code: 'code';
+  --font-nanum: 'Apple SD Gothic Neo', 'Nanum Barun Gothic', 'Nanum Gothic',
+    Verdana, Arial, 'Malgun Gothic', Dotum, sans-serif;
   --break-point: 768px;
   /* dark mode */
   --bg-dark: rgb(31, 35, 41);

@@ -1,7 +1,10 @@
 extends ../layout/base
 
+block style 
+  link(rel="stylesheet" href="/static/css/pages/home.css")
+
 block main
-  include ../components/feature/home/profile
-  aside tag
-  section contents
+  include ../components/profile.pug
+  include ../components/blog-tag.pug
+  include ../components/blog-list.pug
 
