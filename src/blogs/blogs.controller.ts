@@ -109,7 +109,8 @@ export class BlogsController {
         tags: blog.tags.map((tag) => tag.name),
       }
     } catch (error) {
-      throw new NotFoundException(error)
+      throw new BadRequestException(error)
+      // throw new NotFoundException(error)
     }
   }
 
