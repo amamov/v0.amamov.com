@@ -1,0 +1,7 @@
+aside#blog-tag-aside-bottom
+  ul#blog-tag-list-bottom
+    for tag in tags
+      li
+        a.blog-tag(href="/tag?q=#{tag.name}") ##{tag.name}
+
+

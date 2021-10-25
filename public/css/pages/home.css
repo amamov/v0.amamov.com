@@ -1,6 +1,8 @@
 @import url('/static/css/blog-list.css');
+@import url('/static/css/blog-tag.css');
 
 /***************** profile section *****************/
+
 section#profile-section {
   display: flex;
   flex-direction: row;
@@ -28,21 +30,27 @@ p#profile-description {
 }
 
 #profile-link-wrapper {
-  color: var(--color-dark);
   cursor: pointer;
   display: flex;
   flex-direction: row;
 }
 
-#profile-link {
+.profile-link {
+  color: var(--color-dark);
   margin-right: 8px;
 }
 
-#profile-link:hover {
+.profile-link:hover {
   color: var(--color-big-dark);
 }
 
 .divider-line {
   background-color: rgb(52, 58, 64);
   margin: 48px 0;
+}
+
+@media screen and (max-width: 320px) {
+  img#profile-image {
+    display: none;
+  }
 }

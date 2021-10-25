@@ -1,4 +1,5 @@
 @import url('/static/css/editor.css');
+@import url('/static/css/code.css');
 
 body {
   max-width: 793px; /* 768 + 25 */

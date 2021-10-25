@@ -162,14 +162,20 @@ textarea:focus {
   #header_form > input {
     width: 100px;
   }
+
+  #footer_info {
+    font-size: 10px;
+  }
 }
 
 /* footer */
 footer {
   display: flex;
   justify-content: center;
+  padding-bottom: 20px;
 }
 #footer_info {
+  color: var(--color-dark);
   font-size: 11px;
   opacity: 0.8;
 }
