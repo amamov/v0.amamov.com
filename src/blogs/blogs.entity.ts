@@ -16,6 +16,9 @@ import { BlogImageEntity } from './blog-images.entity'
 
 @Entity({
   name: 'BLOG',
+  orderBy: {
+    createdAt: 'DESC',
+  },
 })
 export class BlogEntity extends CommonEntity {
   @IsString()

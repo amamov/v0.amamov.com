@@ -69,6 +69,11 @@ textarea:focus {
   color: var(--color-dark);
 }
 
+hr.divider-line {
+  background-color: #343a40;
+  margin: 48px 0;
+}
+
 #wrapper {
   display: flex;
   flex-direction: column;
@@ -172,7 +177,7 @@ textarea:focus {
 footer {
   display: flex;
   justify-content: center;
-  padding-bottom: 20px;
+  padding: 20px 0;
 }
 #footer_info {
   color: var(--color-dark);
