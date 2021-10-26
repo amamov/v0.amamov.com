@@ -1,7 +1,44 @@
-extends ../layout/base
+extends ../layout/base.pug
+
+block style
+  link(rel="stylesheet" href="/static/css/pages/home.css")
 
 block main
-  include ../components/feature/home/profile
-  aside tag
-  section contents
+  include ../components/profile.pug
+  hr.divider-line
+  aside#blog-tag-aside
+    #blog-tag-title Hashtag
+    ul#blog-tag-list
+      for tag in tags
+        - const tagHref = `/?tag=${tag.name}`
+        li
+          a.blog-tag(href=tagHref) #{tag.name} (#{tag.blogs})
+  section#blog-list-section
+    for blog in blogs.items
+      - const onclickScript = `location.href='/blog/${blog.slug}';`
+      .blog-item(onclick=onclickScript)
+        //- TODO
+        if hasPermission
+          .admin admin
+        .blog-item-date
+          - const createdAt = String(blog.createdAt).split(' ').slice(0, 4).join('.')
+          span=createdAt
+        .blog-item-title=blog.title
+        .blog-item-description=blog.description
+        ul.blog-tag-list-self
+          for blogTag in blog.tags
+            - const tagHref = `/?tag=${blogTag.name}`
+            li
+              a.blog-tag-self(href=tagHref) ##{blogTag.name}
+      hr.divider-line
+
+  include ../components/pagination.pug
+  aside#blog-tag-aside-bottom 
+    ul#blog-tag-list-bottom
+      for tag in tags
+        - const tagHref = `/?tag=${tag.name}`
+        li
+          a.blog-tag(href=tagHref) ##{tag.name}
+
+
 

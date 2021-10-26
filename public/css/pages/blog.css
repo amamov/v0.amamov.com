@@ -1,7 +1,10 @@
 @import url('/static/css/editor.css');
+@import url('/static/css/code.css');
+@import url('/static/css/profile.css');
 
 #title {
-  font-family: var(--font-code);
+  font-family: var(--font-nanum);
+  font-weight: bolder;
   font-size: 48px;
   margin-bottom: 32px;
 }
@@ -10,6 +13,11 @@
   font-size: 16px;
   color: var(--color-dark);
   opacity: 0.8;
+  margin-left: 8px;
+}
+
+#viewer {
+  min-height: 50vh;
 }
 
 @media screen and (max-width: 768px) {
@@ -19,4 +27,35 @@
   #updated-at {
     font-size: 14px;
   }
+}
+
+/******************** tag aside ********************/
+
+ul {
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+}
+
+.blog-tag {
+  display: block;
+  background-color: var(--bg-code-dark);
+  color: var(--color-dark);
+  font-size: 15px;
+  margin-right: 10px;
+  padding: 5px 8px;
+}
+
+.blog-tag:hover {
+  color: var(--color-big-dark);
+}
+
+aside#blog-tag-aside {
+  margin: 25px 0;
+}
+
+#blog-tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
 }

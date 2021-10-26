@@ -48,7 +48,7 @@ export class UsersService {
       throw new UnauthorizedException('해당하는 이메일은 존재하지 않습니다.')
 
     if (!(await bcrypt.compare(password, user.password)))
-      throw new UnauthorizedException('회원가입에 실패하였습니다.')
+      throw new UnauthorizedException('로그인에 실패하였습니다.')
     try {
       const jwt = await this.jwtService.signAsync(
         { sub: user.id },

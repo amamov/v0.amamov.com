@@ -4,21 +4,18 @@ block style
   link(rel="stylesheet" href="https://uicdn.toast.com/editor/3.1.0/toastui-editor.min.css")
   link(rel="stylesheet" href="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.css")
   link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.13/katex.min.css")
-  link(rel="stylesheet" href="/static/css/code.css")
   link(rel="stylesheet" href="/static/css/pages/uploader.css")
 
 block main
-
-
   hr
 
   form(id="blog-upload-form")
     h4 &lt;Blog Title /&gt;
     input(required class="form-control mb-5 bg-color-inherit" type="text" id="blog-title-input" name="title" placeholder="제목을 입력해주세요.")
 
-    h4 &lt;Blog Thumbnail /&gt;
-    input(required class="form-control mb-2 bg-color-inherit" type="file" accept="image/*" id="blog-thumbnail-input" name="thumbnail")
-    #blog-thumbnail-preview(class="mb-5 d-flex justify-content-center")
+    //- h4 &lt;Blog Thumbnail /&gt;
+    //- input(required class="form-control mb-2 bg-color-inherit" type="file" accept="image/*" id="blog-thumbnail-input" name="thumbnail")
+    //- #blog-thumbnail-preview(class="mb-5 d-flex justify-content-center")
 
     h4 &lt;Blog Tags /&gt;
     input(class="form-control mb-5 bg-color-inherit" type="text" id="blog-tags-input" name="tags" placeholder="# 기준으로 태그를 입력해주세요. ex. #python #javascript")

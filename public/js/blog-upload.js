@@ -59,31 +59,25 @@ const editor = new Editor({
 //* document element */
 const blogUploadForm = document.getElementById('blog-upload-form'),
   blogTitleInput = document.getElementById('blog-title-input'),
-  blogThumbnailInput = document.getElementById('blog-thumbnail-input'),
-  blogThumbnailPreview = document.getElementById('blog-thumbnail-preview'),
   blogTagsInput = document.getElementById('blog-tags-input'),
   blogDescriptionInput = document.getElementById('blog-description-input'),
   blogIsPrivateInput = document.getElementById('blog-is-private-input')
+// blogThumbnailInput = document.getElementById('blog-thumbnail-input'),
+// blogThumbnailPreview = document.getElementById('blog-thumbnail-preview'),
 
 //* form data var */
-let thumbnailFile,
-  title,
+let title,
   description,
   isPrivate = false,
   tags = ''
 
 //* form change event handler */
+/*
 const handleBlogThumbnailChange = ({ target: { files } }) => {
-  // input으로 입력받은 파일을 FileReader로 URL로 읽는다.
-  // console.log(files);
   thumbnailFile = files[0]
-  // console.log(thumbnailFile);
   const reader = new FileReader()
-  // 이미지를 브라우저에서 볼 수 있도록 URL로 전달한다.
   reader.readAsDataURL(thumbnailFile)
   reader.onloadend = ({ currentTarget: { result } }) => {
-    // 파일에 대한 읽기 동작이 끝났을 때 실행
-    // console.log(result);
     const thumbnailFileBase64 = result
     const oldImg = blogThumbnailPreview.firstChild
     if (oldImg) blogThumbnailPreview.removeChild(oldImg)
@@ -93,7 +87,9 @@ const handleBlogThumbnailChange = ({ target: { files } }) => {
     img.style.height = 'auto'
     blogThumbnailPreview.appendChild(img)
   }
+  // thumbnail file upload using axios
 }
+*/
 
 const handleBlogTagsChange = ({ target: { value } }) => {
   tags = value
@@ -120,33 +116,30 @@ const handleBlogUploadSubmit = async (event) => {
       alert('글을 작성해주세요.')
       return
     }
-    const formData = new FormData()
-    formData.append('title', title)
-    formData.append('description', description)
-    formData.append('tags', tags)
-    formData.append('isPrivate', isPrivate)
-    formData.append('thumbnail', thumbnailFile)
-    formData.append('contents', html)
-    await (async (formData) => {
-      try {
-        await axios.post('/blog', formData)
-        alert('업로드 성공!')
-        // location.href = '/'
-      } catch (error) {
-        if (error?.response?.data?.message) alert(error.response.data.message)
-        else alert(error)
-      }
-    })(formData)
+    try {
+      await axios.post('/blog', {
+        title,
+        description,
+        tags,
+        isPrivate,
+        contents: html,
+      })
+      alert('업로드 성공!')
+      // location.href = '/'
+    } catch (error) {
+      if (error?.response?.data?.message) alert(error.response.data.message)
+      else alert(error)
+    }
   }
 }
 
 function init() {
   blogUploadForm.addEventListener('submit', handleBlogUploadSubmit)
   blogTitleInput.addEventListener('change', handleBlogTitleChange)
-  blogThumbnailInput.addEventListener('change', handleBlogThumbnailChange)
   blogTagsInput.addEventListener('change', handleBlogTagsChange)
   blogDescriptionInput.addEventListener('change', handleBlogDescriptionChange)
   blogIsPrivateInput.addEventListener('change', handleBlogIsPrivateChange)
+  // blogThumbnailInput.addEventListener('change', handleBlogThumbnailChange)
 }
 
 init()

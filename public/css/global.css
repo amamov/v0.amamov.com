@@ -21,6 +21,8 @@
 :root {
   --font-notosans-regular: 'notosans_regular';
   --font-code: 'code';
+  --font-nanum: 'Apple SD Gothic Neo', 'Nanum Barun Gothic', 'Nanum Gothic',
+    Verdana, Arial, 'Malgun Gothic', Dotum, sans-serif;
   --break-point: 768px;
   /* dark mode */
   --bg-dark: rgb(31, 35, 41);
@@ -65,6 +67,11 @@ textarea:focus {
 .bg-color-inherit:focus {
   background-color: inherit;
   color: var(--color-dark);
+}
+
+hr.divider-line {
+  background-color: #343a40;
+  margin: 48px 0;
 }
 
 #wrapper {
@@ -160,14 +167,20 @@ textarea:focus {
   #header_form > input {
     width: 100px;
   }
+
+  #footer_info {
+    font-size: 10px;
+  }
 }
 
 /* footer */
 footer {
   display: flex;
   justify-content: center;
+  padding: 20px 0;
 }
 #footer_info {
+  color: var(--color-dark);
   font-size: 11px;
   opacity: 0.8;
 }

@@ -28,7 +28,7 @@ h4 {
   border-bottom: 0 !important;
 }
 
-hr {
+.toastui-editor-contents hr {
   border-top: 1px solid var(--color-dark) !important;
 }
 
@@ -128,22 +128,25 @@ hr {
 .toastui-editor-contents h1 {
   font-size: 40px;
   margin: 26.5px 0 16px 0;
+  line-height: 1.2;
 }
 
 .toastui-editor-contents h2 {
   font-size: 32px;
   margin: 26.5px 0 16px 0;
+  line-height: 1.2;
 }
 
 .toastui-editor-contents h3 {
   font-size: 24px;
   margin: 24px 0 16px 0;
+  line-height: 1.2;
 }
 
 .toastui-editor-contents h4,
 .toastui-editor-contents p {
   font-size: 18px;
-  line-height: 30.6px;
+  line-height: 1.5;
 }
 
 .toastui-editor-contents blockquote {

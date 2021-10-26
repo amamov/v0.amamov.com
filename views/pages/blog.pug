@@ -1,15 +1,29 @@
-extends ../layout/base
+extends ../layout/base.pug
 
 block style
   link(rel="stylesheet" href="https://uicdn.toast.com/editor/3.1.0/toastui-editor.min.css")
   link(rel="stylesheet" href="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.css")
-  link(rel="stylesheet" href="/static/css/code.css")
   link(rel="stylesheet" href="/static/css/pages/blog.css")
 
 block main
   h1#title=blogTitle
-  p#updated-at 2021년 10월 18일
+
+  aside#blog-tag-aside 
+    ul#blog-tag-list
+      for tag in tags
+        - const tagHref = `/?tag=${tag}`
+        li
+          a.blog-tag(href=tagHref) ##{tag}
+  - const humanCreatedAt = createdAt.toLocaleDateString().split('. ')
+  - const monthCreatedAt = humanCreatedAt[1]
+  - const dayCreatedAt = humanCreatedAt[2].replace('.', '')
+  - const yearCreatedAt = humanCreatedAt[0]
+  p#updated-at #{yearCreatedAt}년 #{monthCreatedAt}월 #{dayCreatedAt}일
+  hr.divider-line
   #viewer
+  include ../components/profile.pug
+  hr.divider-line
+  script(src="https://utteranc.es/client.js" repo="amamov/amamov-comments" issue-term="pathname" label="amamov.com" theme="photon-dark" crossorigin="anonymous" async)
 
 block script
   script(src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.3/purify.min.js" integrity="sha512-gtcrasYnyeB27+IejClswFlb/eggt+khRr+lLAeNcgg5x2ijlWaiBOPXZkwivNj15LaE6s9CzV57hsoTPrQ5xg==" crossorigin="anonymous" referrerpolicy="no-referrer")
@@ -17,7 +31,6 @@ block script
   script(src="https://uicdn.toast.com/editor/3.1.0/toastui-editor-all.min.js")
   script(src="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight-all.min.js")
   script.
-
     const Viewer = toastui.Editor
     const { codeSyntaxHighlight } = Viewer.plugin
     const viewer = Viewer.factory({
@@ -34,6 +47,5 @@ block script
         })
       },
     })
-    console.log(viewer)
 
 

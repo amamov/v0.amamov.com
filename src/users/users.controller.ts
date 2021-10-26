@@ -36,7 +36,6 @@ export class UsersController {
     @CurrentUser() currentUser: UserDTO,
     @Res({ passthrough: true }) response: Response,
   ) {
-    this.logger.debug(currentUser)
     if (currentUser) throw new NotFoundException('로그인 완료')
     return { title: 'amamov | login' }
   }

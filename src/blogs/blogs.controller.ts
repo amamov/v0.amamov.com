@@ -4,7 +4,6 @@ import {
   Controller,
   Get,
   Logger,
-  NotFoundException,
   Param,
   Post,
   Render,
@@ -81,26 +80,37 @@ export class BlogsController {
     } catch (error) {
       throw new BadRequestException(error)
     }
-    this.logger.debug(context)
   }
 
   // TODO : VISITOR
   @Get(':slug')
   @Render('pages/blog')
+  @UseGuards(JwtAuthGuard)
   async getBlogDetailPage(
+    @CurrentUser() currentUser: UserDTO | null,
     @ClientIp() visitorIp: string,
     @Param('slug') slug: string,
   ) {
+    let hasPermission = false
+    if (currentUser && currentUser.isAdmin) hasPermission = true
     try {
-      const blog = await this.blogsRepository.findOne(
-        { slug, isTemporary: false, isPrivate: false },
-        { relations: ['tags'] },
-      )
+      let blog: BlogEntity
+      if (hasPermission)
+        blog = await this.blogsRepository.findOne(
+          { slug, isTemporary: false },
+          { relations: ['tags'] },
+        )
+      else
+        blog = await this.blogsRepository.findOne(
+          { slug, isTemporary: false, isPrivate: false },
+          { relations: ['tags'] },
+        )
       if (!blog) throw new Error('해당하는 로그를 찾을 수 없습니다.')
       const visitor = this.visitorsRepository.create({ blog, ip: visitorIp })
       await this.visitorsRepository.save(visitor)
       return {
-        title: 'amamov | blog',
+        title: blog.title,
+        hasPermission,
         contents: blog.contents,
         blogTitle: blog.title,
         createdAt: blog.createdAt,
@@ -109,7 +119,8 @@ export class BlogsController {
         tags: blog.tags.map((tag) => tag.name),
       }
     } catch (error) {
-      throw new NotFoundException(error)
+      throw new BadRequestException(error)
+      // throw new NotFoundException(error)
     }
   }
 
@@ -117,11 +128,10 @@ export class BlogsController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(new OnlyAdminInterceptor(), FileInterceptor('thumbnail'))
+  @UseInterceptors(new OnlyAdminInterceptor())
   @UseFilters(new HttpApiExceptionFilter())
   async uploadBlog(
     @CurrentUser() currentUser: UserDTO,
-    @UploadedFile() thumbnailFile: Express.Multer.File,
     @Body(new BlogUploadBodyPipe()) uploadData: BlogUploadDTO,
   ): Promise<void> {
     const queryRunner = this.ormConnection.createQueryRunner()
@@ -149,11 +159,12 @@ export class BlogsController {
       blog.description = uploadData.description
       blog.isPrivate = uploadData.isPrivate as boolean
       blog.author = author
-      const { key: thumbnail } = await this.awsService.uploadFileToS3(
-        `blog/${blog.id}`,
-        thumbnailFile,
-      )
-      blog.thumbnail = thumbnail
+      // [썸네일 업로드 X]
+      // const { key: thumbnail } = await this.awsService.uploadFileToS3(
+      //   `blog/${blog.id}`,
+      //   thumbnailFile,
+      // )
+      // blog.thumbnail = thumbnail
       const slug = uploadData.title
         .replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '')
         .split(' ')
