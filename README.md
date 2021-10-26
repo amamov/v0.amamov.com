@@ -1,1 +1,1 @@
-# amamov-blog
+# amamov.com
