@@ -1,5 +1,4 @@
 @import url('/static/css/profile.css');
-@import url('/static/css/pagination.css');
 
 ul {
   list-style: none;
@@ -142,4 +141,37 @@ aside#blog-tag-aside-bottom {
 .blog-current-tag {
   color: var(--color-big-dark);
   text-decoration: underline;
+}
+
+/***************** pagination section *****************/
+
+#pagination-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 100px 0 50px 0;
+  font-size: 17px;
+}
+
+.pagination-controller {
+  color: var(--color-dark);
+}
+
+a.pagination-controller:hover {
+  text-decoration: none;
+  color: var(--color-big-dark);
+}
+
+.pagination-not-allowed {
+  cursor: not-allowed;
+}
+
+#pagination-number {
+  color: var(--color-dark);
+}
+
+@media screen and (max-width: 414px) {
+  #pagination-wrapper {
+    margin: 70px 0 50px 0;
+  }
 }
