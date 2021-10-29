@@ -16,6 +16,9 @@ export class BlogsService {
     tagName = '',
     searchKeyword = '',
   ) {
+    let { limit, page } = pagenationOptions
+    limit = limit > 10 ? 10 : Number(limit)
+    page = page < 1 ? 1 : Number(page)
     const blogsQueryBuilder = this.blogsRepository
       .createQueryBuilder('b')
       .where('b.isTemporary = false')
@@ -28,6 +31,8 @@ export class BlogsService {
         'b.slug',
       ])
     // .leftJoinAndSelect('b.tags', 't') // issue : #13
+    // .offset((page - 1) * limit)
+    // .limit(limit)
 
     if (tagName)
       blogsQueryBuilder.leftJoin('b.tags', 't').andWhere('t.name = :tagName', {
@@ -42,7 +47,16 @@ export class BlogsService {
 
     return await paginate<BlogEntity>(blogsQueryBuilder, {
       ...pagenationOptions,
-      limit: pagenationOptions.limit > 6 ? 6 : pagenationOptions.limit,
+      limit,
+      page,
     })
+
+    // return {
+    //   items: await blogsQueryBuilder.getMany(),
+    //   meta: {
+    //     currentPage: page,
+    //     totalPages: ...,
+    //   },
+    // }
   }
 }

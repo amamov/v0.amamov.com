@@ -1,26 +1,35 @@
-//- blogs, row, currentTag, searchKeyword
+//- currentPage, totalPage, currentTag, searchKeyword
 
-- const range = (start, end) => (new Array(end - start + 1)).fill(undefined).map((_, k) => k + start)
-- const paginationInfo = blogs.meta
-- const maxPageNumber = 2
-- const totalPages = paginationInfo.totalPages 
-- const currentPage = paginationInfo.currentPage
-- const totalItems = paginationInfo.totalItems
-- const perPages = range(1, totalPages)
+- let dynamicPrevPage = currentPage
+- let dynamicNextPage = currentPage
+- const isFirstPage = currentPage === 1
+- const isLastPage = currentPage === totalPage
 
 #pagination-wrapper
-  a(href=`?row=${--row}` title="prev").pagination-controller ◀
-  ul#pagination-list
-    for page in perPages
-      li.pagination-item
-        if currentPage === page
-          a(href="#").pagination-number.page-active=page 
-        else
-          if currentTag !== ""
-            a(href=`?page=${page}&tag=${currentTag}`).pagination-number=page
-          else if searchKeyword !== ""
-            a(href=`?page=${page}&q=${searchKeyword}`).pagination-number=page
-          else
-            a(href=`?page=${page}`).pagination-number=page
-  a(href=`?row=${++row}` title="next").pagination-controller ▶
+  if currentTag !== ""
+    if !isFirstPage
+      a(href=`?page=${--dynamicPrevPage}&tag=${currentTag}` title="prev").pagination-controller ◀
+    else
+      .pagination-controller.pagination-not-allowed ◀
+  else if searchKeyword !== ""
+    if !isFirstPage
+      a(href=`?page=${--dynamicPrevPage}&q=${searchKeyword}` title="prev").pagination-controller ◀
+    else
+      .pagination-controller.pagination-not-allowed ◀
+  else 
+    if !isFirstPage
+      a(href=`?page=${--dynamicPrevPage}` title="prev").pagination-controller ◀
+    else
+      .pagination-controller.pagination-not-allowed ◀
+  span#pagination-number=currentPage
+  if currentTag !== ""
+    if !isLastPage
+      a(href=`?page=${++dynamicNextPage}&tag=${currentTag}` title="next").pagination-controller ▶
+  else if searchKeyword !== ""
+    if !isLastPage
+      a(href=`?page=${++dynamicNextPage}&q=${searchKeyword}` title="next").pagination-controller ▶
+  else 
+    if !isLastPage
+      a(href=`?page=${++dynamicNextPage}` title="next").pagination-controller ▶
+
 

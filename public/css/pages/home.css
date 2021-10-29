@@ -129,3 +129,8 @@ aside#blog-tag-aside-bottom {
     margin-right: 10px;
   }
 }
+
+.blog-current-tag {
+  color: var(--color-big-dark);
+  text-decoration: underline;
+}

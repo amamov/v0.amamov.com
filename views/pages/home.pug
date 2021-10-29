@@ -12,23 +12,24 @@ block main
       for tag in tags
         - const tagHref = `/?tag=${tag.name}`
         li
-          a.blog-tag(href=tagHref) #{tag.name} (#{tag.blogs})
+          if tag.name === currentTag
+            a.blog-tag.blog-current-tag(href=tagHref) #{tag.name} (#{tag.blogs})
+          else
+            a.blog-tag(href=tagHref) #{tag.name} (#{tag.blogs})
   section#blog-list-section
-    for blog in blogs.items
+    if blogs.length === 0
+      #empty-message=emptyMessage
+    for blog in blogs
       .blog-item(onclick=`location.href='/blog/${blog.slug}';`)
-        //- TODO
-        if hasPermission
-          .admin admin
         .blog-item-date
           span=String(blog.createdAt).split(' ').slice(0, 4).join('.')
         .blog-item-title=blog.title
         .blog-item-description=blog.description
-        //- 
+        //- 블로그에 해당하는 태그들 issue #13
         //- ul.blog-tag-list-self
         //-   for blogTag in blog.tags
-        //-     - const tagHref = `/?tag=${blogTag.name}`
         //-     li
-        //-       a.blog-tag-self(href=tagHref) ##{blogTag.name}
+        //-       a.blog-tag-self(href=`/?tag=${blogTag.name}`) ##{blogTag.name}
       hr.divider-line
 
   include ../components/pagination.pug
@@ -36,8 +37,10 @@ block main
   aside#blog-tag-aside-bottom 
     ul#blog-tag-list-bottom
       for tag in tags
-        - const tagHref = `/?tag=${tag.name}`
         li
-          a.blog-tag(href=tagHref) ##{tag.name}
+          if tag.name === currentTag
+            a.blog-tag.blog-current-tag(href=`/?tag=${tag.name}`) ##{tag.name}
+          else
+            a.blog-tag(href=`/?tag=${tag.name}`) ##{tag.name} 
 
 
