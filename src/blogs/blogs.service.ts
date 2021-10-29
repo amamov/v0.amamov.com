@@ -2,11 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { BlogEntity } from './blogs.entity'
-import {
-  paginate,
-  Pagination,
-  IPaginationOptions,
-} from 'nestjs-typeorm-paginate'
+import { paginate, IPaginationOptions } from 'nestjs-typeorm-paginate'
 
 @Injectable()
 export class BlogsService {
@@ -19,7 +15,7 @@ export class BlogsService {
     pagenationOptions: IPaginationOptions,
     tagName = '',
     searchKeyword = '',
-  ): Promise<Pagination<BlogEntity>> {
+  ) {
     const blogsQueryBuilder = this.blogsRepository
       .createQueryBuilder('b')
       .where('b.isTemporary = false')
@@ -31,15 +27,22 @@ export class BlogsService {
         'b.isPrivate',
         'b.slug',
       ])
-      .leftJoinAndSelect('b.tags', 't')
+    // .leftJoinAndSelect('b.tags', 't') // issue : #13
+
     if (tagName)
-      blogsQueryBuilder.andWhere('t.name = :tagName', { tagName: tagName })
+      blogsQueryBuilder.leftJoin('b.tags', 't').andWhere('t.name = :tagName', {
+        tagName: tagName,
+      }) // issue : #13
     if (searchKeyword)
       blogsQueryBuilder
         .andWhere('b.title LIKE :title', { title: `%${searchKeyword}%` })
         .orWhere('b.description LIKE :description', {
           description: `%${searchKeyword}%`,
         })
-    return paginate<BlogEntity>(blogsQueryBuilder, pagenationOptions)
+
+    return await paginate<BlogEntity>(blogsQueryBuilder, {
+      ...pagenationOptions,
+      limit: pagenationOptions.limit > 6 ? 6 : pagenationOptions.limit,
+    })
   }
 }

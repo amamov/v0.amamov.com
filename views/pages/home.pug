@@ -15,30 +15,29 @@ block main
           a.blog-tag(href=tagHref) #{tag.name} (#{tag.blogs})
   section#blog-list-section
     for blog in blogs.items
-      - const onclickScript = `location.href='/blog/${blog.slug}';`
-      .blog-item(onclick=onclickScript)
+      .blog-item(onclick=`location.href='/blog/${blog.slug}';`)
         //- TODO
         if hasPermission
           .admin admin
         .blog-item-date
-          - const createdAt = String(blog.createdAt).split(' ').slice(0, 4).join('.')
-          span=createdAt
+          span=String(blog.createdAt).split(' ').slice(0, 4).join('.')
         .blog-item-title=blog.title
         .blog-item-description=blog.description
-        ul.blog-tag-list-self
-          for blogTag in blog.tags
-            - const tagHref = `/?tag=${blogTag.name}`
-            li
-              a.blog-tag-self(href=tagHref) ##{blogTag.name}
+        //- 
+        //- ul.blog-tag-list-self
+        //-   for blogTag in blog.tags
+        //-     - const tagHref = `/?tag=${blogTag.name}`
+        //-     li
+        //-       a.blog-tag-self(href=tagHref) ##{blogTag.name}
       hr.divider-line
 
   include ../components/pagination.pug
+
   aside#blog-tag-aside-bottom 
     ul#blog-tag-list-bottom
       for tag in tags
         - const tagHref = `/?tag=${tag.name}`
         li
           a.blog-tag(href=tagHref) ##{tag.name}
-
 
 

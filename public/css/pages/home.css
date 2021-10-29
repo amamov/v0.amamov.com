@@ -1,4 +1,5 @@
 @import url('/static/css/profile.css');
+@import url('/static/css/pagination.css');
 
 ul {
   list-style: none;
@@ -9,6 +10,7 @@ ul {
 /***************** blog list section *****************/
 
 section#blog-list-section {
+  min-height: 70vh;
   font-family: var(--font-nanum);
 }
 

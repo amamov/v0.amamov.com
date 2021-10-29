@@ -1,0 +1,38 @@
+#pagination-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 10px; /* TODO */
+  margin: 30px 0; /* TODO */
+  font-size: 20px; /* TODO */
+}
+
+a.pagination-controller {
+  color: var(--color-dark);
+}
+
+a.pagination-controller:hover {
+  text-decoration: none;
+  color: var(--color-big-dark);
+}
+
+ul#pagination-list {
+  display: flex;
+  gap: 10px;
+}
+
+li.pagination-item {
+}
+
+a.pagination-number {
+  color: var(--color-dark);
+}
+
+a.pagination-number:hover {
+  text-decoration: none;
+  color: var(--color-big-dark);
+}
+
+a.pagination-number.page-active {
+  font-size: 30px; /* TODO remove */
+  color: var(--color-big-dark);
+}

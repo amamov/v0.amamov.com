@@ -1,1 +1,26 @@
-section pagination
+//- blogs, row, currentTag, searchKeyword
+
+- const range = (start, end) => (new Array(end - start + 1)).fill(undefined).map((_, k) => k + start)
+- const paginationInfo = blogs.meta
+- const maxPageNumber = 2
+- const totalPages = paginationInfo.totalPages 
+- const currentPage = paginationInfo.currentPage
+- const totalItems = paginationInfo.totalItems
+- const perPages = range(1, totalPages)
+
+#pagination-wrapper
+  a(href=`?row=${--row}` title="prev").pagination-controller ◀
+  ul#pagination-list
+    for page in perPages
+      li.pagination-item
+        if currentPage === page
+          a(href="#").pagination-number.page-active=page 
+        else
+          if currentTag !== ""
+            a(href=`?page=${page}&tag=${currentTag}`).pagination-number=page
+          else if searchKeyword !== ""
+            a(href=`?page=${page}&q=${searchKeyword}`).pagination-number=page
+          else
+            a(href=`?page=${page}`).pagination-number=page
+  a(href=`?row=${++row}` title="next").pagination-controller ▶
+
