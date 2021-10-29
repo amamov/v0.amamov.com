@@ -1,1 +1,35 @@
-section pagination
+//- currentPage, totalPage, currentTag, searchKeyword
+
+- let dynamicPrevPage = currentPage
+- let dynamicNextPage = currentPage
+- const isFirstPage = currentPage === 1
+- const isLastPage = currentPage === totalPage
+
+#pagination-wrapper
+  if currentTag !== ""
+    if !isFirstPage
+      a(href=`?page=${--dynamicPrevPage}&tag=${currentTag}` title="prev").pagination-controller ◀
+    else
+      .pagination-controller.pagination-not-allowed ◀
+  else if searchKeyword !== ""
+    if !isFirstPage
+      a(href=`?page=${--dynamicPrevPage}&q=${searchKeyword}` title="prev").pagination-controller ◀
+    else
+      .pagination-controller.pagination-not-allowed ◀
+  else 
+    if !isFirstPage
+      a(href=`?page=${--dynamicPrevPage}` title="prev").pagination-controller ◀
+    else
+      .pagination-controller.pagination-not-allowed ◀
+  span#pagination-number=currentPage
+  if currentTag !== ""
+    if !isLastPage
+      a(href=`?page=${++dynamicNextPage}&tag=${currentTag}` title="next").pagination-controller ▶
+  else if searchKeyword !== ""
+    if !isLastPage
+      a(href=`?page=${++dynamicNextPage}&q=${searchKeyword}` title="next").pagination-controller ▶
+  else 
+    if !isLastPage
+      a(href=`?page=${++dynamicNextPage}` title="next").pagination-controller ▶
+
+

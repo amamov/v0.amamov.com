@@ -1,4 +1,5 @@
 @import url('/static/css/profile.css');
+@import url('/static/css/pagination.css');
 
 ul {
   list-style: none;
@@ -6,9 +7,19 @@ ul {
   padding: 0px;
 }
 
+#empty-message {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 40vh;
+}
+
 /***************** blog list section *****************/
 
 section#blog-list-section {
+  min-height: 70vh;
   font-family: var(--font-nanum);
 }
 
@@ -126,4 +137,9 @@ aside#blog-tag-aside-bottom {
     display: block;
     margin-right: 10px;
   }
+}
+
+.blog-current-tag {
+  color: var(--color-big-dark);
+  text-decoration: underline;
 }
