@@ -4,6 +4,7 @@ import {
   Controller,
   Get,
   Logger,
+  NotFoundException,
   Param,
   Patch,
   Post,
@@ -47,6 +48,20 @@ export class BlogsController {
     private readonly awsService: AwsService,
   ) {}
 
+  // TODO
+  @Get('v1/update/:blogSlug')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(new OnlyAdminInterceptor())
+  @Render('pages/blog-update')
+  async getBlogUpdate(@Param('blogSlug') blogSlug: string) {
+    const context = { title: 'amamov | update' }
+    try {
+      return context
+    } catch (error) {
+      throw new BadRequestException(error)
+    }
+  }
+
   @Get('v1/uploads')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(new OnlyAdminInterceptor())
@@ -78,42 +93,7 @@ export class BlogsController {
         await this.blogsRepository.save(blog)
         context.blogId = blog.id
       }
-    } catch (error) {
-      throw new BadRequestException(error)
-    }
-  }
-
-  @Get('v1/update/:blogSlug')
-  @UseGuards(JwtAuthGuard)
-  @UseInterceptors(new OnlyAdminInterceptor())
-  @Render('pages/uploader')
-  async getBlogUpdate(@Param('blogSlug') blogSlug: string) {
-    const context = { title: 'amamov | upload', blogId: '' }
-    try {
-      const existedBlog = await this.blogsRepository.findOne(
-        {
-          isTemporary: true,
-        },
-        { relations: ['images'] },
-      )
-      if (existedBlog) {
-        context.blogId = existedBlog.id
-        if (existedBlog.images.length > 0) {
-          existedBlog.images.forEach(async (imageEntity) => {
-            await Promise.all([
-              this.blogImagesRepository.delete(imageEntity.id),
-              this.awsService.deleteS3Object(imageEntity.image),
-            ])
-          })
-        }
-      } else {
-        const blog = this.blogsRepository.create({
-          isTemporary: true,
-          isPrivate: true,
-        })
-        await this.blogsRepository.save(blog)
-        context.blogId = blog.id
-      }
+      return context
     } catch (error) {
       throw new BadRequestException(error)
     }
@@ -157,8 +137,8 @@ export class BlogsController {
         tags: blog.tags.map((tag) => tag.name),
       }
     } catch (error) {
-      throw new BadRequestException(error)
-      // throw new NotFoundException(error)
+      // throw new BadRequestException(error)
+      throw new NotFoundException(error)
     }
   }
 
@@ -274,6 +254,21 @@ export class BlogsController {
       const blog = await this.blogsRepository.findOne({ slug: blogSlug })
       blog.isPrivate = !blog.isPrivate
       await this.blogsRepository.save(blog)
+    } catch (error) {
+      throw new BadRequestException(error)
+    }
+  }
+
+  @Post('save')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(new OnlyAdminInterceptor())
+  @UseFilters(new HttpApiExceptionFilter())
+  async saveBlog(
+    @CurrentUser() currentUser: UserDTO,
+    @Body(new BlogUploadBodyPipe()) uploadData: BlogUploadDTO,
+  ): Promise<void> {
+    try {
+      this.logger.debug('save')
     } catch (error) {
       throw new BadRequestException(error)
     }

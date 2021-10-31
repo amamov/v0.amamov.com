@@ -142,10 +142,9 @@ const handleBlogUploadSubmit = async (event) => {
   }
 }
 
-const handleBlogSaveClick = (event) => {
+const handleBlogSaveClick = () => {
   // 임시저장
-  event.preventDefault()
-  alert('개발중...')
+  console.log('임시저장')
 }
 
 function init() {
