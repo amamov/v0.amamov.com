@@ -1,6 +1,19 @@
 'use-strict'
 
-//* global var : initialValue
+/* [Global Var]
+blogId
+blogUploadFormEle
+blogTitleInputEle
+blogTagsInputEle
+blogDescriptionInputEle
+blogIsPrivateInputEle
+blogInitialContents
+blogTitleInputEleDefaultValue
+blogTagsInputEleDefaultValue
+blogDescriptionInputEleDefaultValue
+blogIsPrivateInputEleDefaultValue
+blogDeleteBtEle
+*/
 
 //* toast-ui editor */
 const Editor = toastui.Editor
@@ -16,6 +29,7 @@ const editorUploadImage = async (blob) => {
   }
 }
 const editor = new Editor({
+  initialValue: blogInitialContents,
   el: document.querySelector('#editor'),
   height: '80vh',
   initialEditType: 'markdown',
@@ -58,41 +72,13 @@ const editor = new Editor({
 
 //****************************************************************************/
 
-//* document element */
-const blogUploadForm = document.getElementById('blog-upload-form'),
-  blogTitleInput = document.getElementById('blog-title-input'),
-  blogTagsInput = document.getElementById('blog-tags-input'),
-  blogDescriptionInput = document.getElementById('blog-description-input'),
-  blogIsPrivateInput = document.getElementById('blog-is-private-input'),
-  blogSaveBt = document.getElementById('blog-save-bt')
-// blogThumbnailInput = document.getElementById('blog-thumbnail-input'),
-// blogThumbnailPreview = document.getElementById('blog-thumbnail-preview'),
-
 //* form data var */
-let title,
-  description,
-  isPrivate = false,
-  tags = ''
+let title = String(blogTitleInputEleDefaultValue),
+  description = String(blogDescriptionInputEleDefaultValue),
+  isPrivate = Boolean(blogIsPrivateInputEleDefaultValue),
+  tags = String(blogTagsInputEleDefaultValue)
 
 //* form change event handler */
-/*
-const handleBlogThumbnailChange = ({ target: { files } }) => {
-  thumbnailFile = files[0]
-  const reader = new FileReader()
-  reader.readAsDataURL(thumbnailFile)
-  reader.onloadend = ({ currentTarget: { result } }) => {
-    const thumbnailFileBase64 = result
-    const oldImg = blogThumbnailPreview.firstChild
-    if (oldImg) blogThumbnailPreview.removeChild(oldImg)
-    const img = document.createElement('img')
-    img.src = thumbnailFileBase64
-    img.style.width = '424px'
-    img.style.height = 'auto'
-    blogThumbnailPreview.appendChild(img)
-  }
-  // thumbnail file upload using axios
-}
-*/
 
 const beforeUnloadListener = (event) => {
   event.preventDefault()
@@ -118,25 +104,24 @@ const handleBlogTitleChange = ({ target: { value } }) => {
 //* form submit event handler */
 const handleBlogUploadSubmit = async (event) => {
   event.preventDefault()
-  if (window.confirm('업로드 하시겠습니까?')) {
+  if (window.confirm('업데이트 하시겠습니까?')) {
     const html = editor.getHTML()
     if (!html) {
       alert('글을 작성해주세요.')
       return
     }
     try {
-      await axios.post('/blog', {
+      await axios.post(`/blog/update/${blogId}`, {
         title,
         description,
         tags,
         isPrivate,
         contents: html,
       })
-      alert('업로드 성공!')
       window.removeEventListener('beforeunload', beforeUnloadListener, {
         capture: true,
       })
-      location.href = '/'
+      location.href = document.referrer
     } catch (error) {
       if (error?.response?.data?.message) alert(error.response.data.message)
       else alert(error)
@@ -144,19 +129,31 @@ const handleBlogUploadSubmit = async (event) => {
   }
 }
 
-const handleBlogSaveClick = () => {
-  // 임시저장
-  console.log('임시저장')
+const handleBlogDeleteClick = async () => {
+  try {
+    if (window.confirm('해당 게시물을 삭제할래요?')) {
+      await axios.delete(`/blog/${blogId}`)
+      window.removeEventListener('beforeunload', beforeUnloadListener, {
+        capture: true,
+      })
+      location.href = '/'
+    }
+  } catch (error) {
+    if (error?.response?.data?.message) alert(error.response.data.message)
+    else alert(error)
+  }
 }
 
 function init() {
-  blogUploadForm.addEventListener('submit', handleBlogUploadSubmit)
-  blogTitleInput.addEventListener('change', handleBlogTitleChange)
-  blogTagsInput.addEventListener('change', handleBlogTagsChange)
-  blogDescriptionInput.addEventListener('change', handleBlogDescriptionChange)
-  blogIsPrivateInput.addEventListener('change', handleBlogIsPrivateChange)
-  blogSaveBt.addEventListener('click', handleBlogSaveClick)
-  // blogThumbnailInput.addEventListener('change', handleBlogThumbnailChange)
+  blogUploadFormEle.addEventListener('submit', handleBlogUploadSubmit)
+  blogTitleInputEle.addEventListener('change', handleBlogTitleChange)
+  blogTagsInputEle.addEventListener('change', handleBlogTagsChange)
+  blogDescriptionInputEle.addEventListener(
+    'change',
+    handleBlogDescriptionChange,
+  )
+  blogIsPrivateInputEle.addEventListener('change', handleBlogIsPrivateChange)
+  blogDeleteBtEle.addEventListener('click', handleBlogDeleteClick)
 
   // 브라우저 탈출 방지
   window.addEventListener('beforeunload', beforeUnloadListener, {

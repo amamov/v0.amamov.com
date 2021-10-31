@@ -130,7 +130,6 @@ const handleBlogUploadSubmit = async (event) => {
         isPrivate,
         contents: html,
       })
-      alert('업로드 성공!')
       window.removeEventListener('beforeunload', beforeUnloadListener, {
         capture: true,
       })

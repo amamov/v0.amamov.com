@@ -8,6 +8,9 @@ block style
 
 block main
   hr
+  .delete-bt-box.mb-5
+    h3 Update
+    button#delete-bt(type="clicl" class="btn btn-dark") 삭제
 
   form(id="blog-upload-form")
     h4 &lt;Blog Title /&gt;
@@ -35,5 +38,20 @@ block script
   script(src="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight-all.min.js")
   script(src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.13/katex.min.js")
   script.
-    const initialContents = !{JSON.stringify(initialValue)}
-  script(src="/static/js/blog-upload.js")
+    const blogId = !{JSON.stringify(blogId)}
+    const blogInitialContents = !{JSON.stringify(blogInitialContents)}
+    const blogTitleInputEleDefaultValue = !{JSON.stringify(blogTitle)}
+    const blogTagsInputEleDefaultValue = !{JSON.stringify(tags)}
+    const blogDescriptionInputEleDefaultValue = !{JSON.stringify(description)}
+    const blogIsPrivateInputEleDefaultValue = !{JSON.stringify(isPrivate)}
+    const blogUploadFormEle = document.getElementById('blog-upload-form')
+    const blogTitleInputEle = document.getElementById('blog-title-input')
+    blogTitleInputEle.defaultValue = blogTitleInputEleDefaultValue
+    const blogTagsInputEle = document.getElementById('blog-tags-input')
+    blogTagsInputEle.defaultValue = blogTagsInputEleDefaultValue
+    const blogDescriptionInputEle = document.getElementById('blog-description-input')
+    blogDescriptionInputEle.defaultValue = blogDescriptionInputEleDefaultValue
+    const blogIsPrivateInputEle = document.getElementById('blog-is-private-input')
+    blogIsPrivateInputEle.checked = blogIsPrivateInputEleDefaultValue
+    const blogDeleteBtEle = document.getElementById('delete-bt')
+  script(src="/static/js/blog-update.js")

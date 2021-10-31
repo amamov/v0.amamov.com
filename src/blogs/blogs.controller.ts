@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   Logger,
   NotFoundException,
@@ -20,35 +21,32 @@ import { CurrentUser } from '@common/decorators/current-user.decorator'
 import { HttpApiExceptionFilter } from '@common/exceptions/http-api-exception.filter'
 import { OnlyAdminInterceptor } from '@common/interceptors/only-admin.interceptor'
 import { AwsService } from '@common/services/aws.service'
-import { TagEntity } from 'src/tags/tags.entity'
 import { UserDTO } from 'src/users/dtos/user.dto'
 import { JwtAuthGuard } from 'src/users/jwt/jwt.guard'
-import { UsersService } from 'src/users/users.service'
-import { Connection, Repository } from 'typeorm'
 import { BlogImageEntity } from './blog-images.entity'
 import { BlogUploadBodyPipe } from './blog-upload-body.pipe'
 import { BlogEntity } from './blogs.entity'
 import { BlogUploadDTO } from './dtos/blog-upload.dto'
 import { ClientIp } from '@common/decorators/client-real-ip.decorator'
 import { VisitorEntity } from 'src/visitors/visitors.entity'
+import { BlogsService } from './blogs.service'
+import { Repository } from 'typeorm'
 
 @Controller('blog')
 export class BlogsController {
   private logger = new Logger(BlogsController.name)
 
   constructor(
-    private readonly ormConnection: Connection,
     @InjectRepository(VisitorEntity)
     private readonly visitorsRepository: Repository<VisitorEntity>,
     @InjectRepository(BlogEntity)
     private readonly blogsRepository: Repository<BlogEntity>,
     @InjectRepository(BlogImageEntity)
     private readonly blogImagesRepository: Repository<BlogImageEntity>,
-    private readonly usersServie: UsersService,
+    private readonly blogsService: BlogsService,
     private readonly awsService: AwsService,
   ) {}
 
-  // TODO
   @Get('v1/update/:blogSlug')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(new OnlyAdminInterceptor())
@@ -57,15 +55,22 @@ export class BlogsController {
     try {
       const blog = await this.blogsRepository
         .createQueryBuilder('b')
+        .where('b.slug = :slug', { slug: blogSlug })
         .leftJoinAndSelect('b.tags', 't')
         .getOne()
 
-      // TODO
+      const tags = blog.tags
+        ? '#' + blog.tags.map((tag) => tag.name).join(' #')
+        : ''
 
       return {
         title: 'amamov | update',
+        blogId: blog.id,
         blogTitle: blog.title,
-        tags: blog.tags,
+        description: blog.description,
+        isPrivate: blog.isPrivate,
+        tags,
+        blogInitialContents: blog.contents,
       }
     } catch (error) {
       throw new BadRequestException(error)
@@ -162,73 +167,36 @@ export class BlogsController {
     @CurrentUser() currentUser: UserDTO,
     @Body(new BlogUploadBodyPipe()) uploadData: BlogUploadDTO,
   ): Promise<void> {
-    const queryRunner = this.ormConnection.createQueryRunner()
-    await queryRunner.connect()
-    await queryRunner.startTransaction()
-    const author = await this.usersServie.findUserById(currentUser.id)
-    try {
-      // Typeorm.feature([BlogEntity])의 커넥션으로 연결, 트랜젝션을 위한 queryRunner의 커넥션으로는 연결 안됨
-      // const blog = await this.blogsRepository.findOne({ isTemporary: true })
-      const blog = await queryRunner.manager
-        .getRepository(BlogEntity)
-        .findOne({ isTemporary: true })
-      blog.isTemporary = false
-      if (
-        await queryRunner.manager
-          .getRepository(BlogEntity)
-          .findOne({ title: uploadData.title })
-      ) {
-        throw new BadRequestException(
-          '해당하는 제목의 게시물은 이미 존재합니다.',
-        )
-      }
-      blog.title = uploadData.title
-      blog.contents = uploadData.contents
-      blog.description = uploadData.description
-      blog.isPrivate = uploadData.isPrivate as boolean
-      blog.author = author
-      // [썸네일 업로드 X]
-      // const { key: thumbnail } = await this.awsService.uploadFileToS3(
-      //   `blog/${blog.id}`,
-      //   thumbnailFile,
-      // )
-      // blog.thumbnail = thumbnail
-      const slug = uploadData.title
-        .replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '')
-        .split(' ')
-        .filter((w) => w !== '')
-        .join('-')
-      if (await queryRunner.manager.getRepository(BlogEntity).findOne({ slug }))
-        blog.slug = `${slug}-${Math.floor(Math.random() * 1000)}`
-      else blog.slug = slug
-      const tagList = uploadData.tags
-        .replace(/[`~!@$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '')
-        .replace(/ /g, '')
-        .split('#')
-        .filter((w) => w !== '')
-      const tags: TagEntity[] = []
-      for (const tagName of tagList) {
-        const existedTag = await queryRunner.manager
-          .getRepository(TagEntity)
-          .findOne({ name: tagName })
-        if (existedTag) {
-          tags.push(existedTag)
-        } else {
-          const newTag = queryRunner.manager
-            .getRepository(TagEntity)
-            .create({ name: tagName })
-          tags.push(newTag)
-        }
-      }
-      blog.tags = tags
-      await queryRunner.manager.getRepository(BlogEntity).save(blog)
-      await queryRunner.commitTransaction()
-    } catch (error) {
-      await queryRunner.rollbackTransaction()
-      throw new BadRequestException(error)
-    } finally {
-      await queryRunner.release()
-    }
+    return await this.blogsService.uploadBlogPoster(
+      currentUser.id,
+      { isTemporary: true },
+      uploadData,
+    )
+  }
+
+  @Delete(':blogId')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(new OnlyAdminInterceptor())
+  @UseFilters(new HttpApiExceptionFilter())
+  async deleteBlog(@Param('blogId') blogId: string): Promise<void> {
+    await this.blogsRepository.softDelete(blogId)
+  }
+
+  @Post('update/:blogId')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(new OnlyAdminInterceptor())
+  @UseFilters(new HttpApiExceptionFilter())
+  async updateBlog(
+    @CurrentUser() currentUser: UserDTO,
+    @Body(new BlogUploadBodyPipe()) uploadData: BlogUploadDTO,
+    @Param('blogId') blogId: string,
+  ): Promise<void> {
+    return await this.blogsService.uploadBlogPoster(
+      currentUser.id,
+      { id: blogId },
+      uploadData,
+      { isNew: false, updateBlogId: blogId },
+    )
   }
 
   @Post('v1/image')
