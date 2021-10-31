@@ -14,3 +14,8 @@ body {
   width: 150px;
   margin-bottom: 100px;
 }
+
+.delete-bt-box {
+  display: flex;
+  justify-content: space-between;
+}
