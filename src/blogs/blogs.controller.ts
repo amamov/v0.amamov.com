@@ -5,6 +5,7 @@ import {
   Get,
   Logger,
   Param,
+  Patch,
   Post,
   Render,
   UploadedFile,
@@ -82,6 +83,42 @@ export class BlogsController {
     }
   }
 
+  @Get('v1/update/:blogSlug')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(new OnlyAdminInterceptor())
+  @Render('pages/uploader')
+  async getBlogUpdate(@Param('blogSlug') blogSlug: string) {
+    const context = { title: 'amamov | upload', blogId: '' }
+    try {
+      const existedBlog = await this.blogsRepository.findOne(
+        {
+          isTemporary: true,
+        },
+        { relations: ['images'] },
+      )
+      if (existedBlog) {
+        context.blogId = existedBlog.id
+        if (existedBlog.images.length > 0) {
+          existedBlog.images.forEach(async (imageEntity) => {
+            await Promise.all([
+              this.blogImagesRepository.delete(imageEntity.id),
+              this.awsService.deleteS3Object(imageEntity.image),
+            ])
+          })
+        }
+      } else {
+        const blog = this.blogsRepository.create({
+          isTemporary: true,
+          isPrivate: true,
+        })
+        await this.blogsRepository.save(blog)
+        context.blogId = blog.id
+      }
+    } catch (error) {
+      throw new BadRequestException(error)
+    }
+  }
+
   // TODO : VISITOR
   @Get(':slug')
   @Render('pages/blog')
@@ -111,6 +148,7 @@ export class BlogsController {
       return {
         title: blog.title,
         hasPermission,
+        slug: blog.slug,
         contents: blog.contents,
         blogTitle: blog.title,
         createdAt: blog.createdAt,
@@ -222,6 +260,20 @@ export class BlogsController {
       })
       await this.blogImagesRepository.save(blogImage)
       return { image: this.awsService.getAwsS3FileUrl(blogImage.image) }
+    } catch (error) {
+      throw new BadRequestException(error)
+    }
+  }
+
+  @Patch('private/:blogSlug')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(new OnlyAdminInterceptor())
+  @UseFilters(new HttpApiExceptionFilter())
+  async togglePrivate(@Param('blogSlug') blogSlug: string) {
+    try {
+      const blog = await this.blogsRepository.findOne({ slug: blogSlug })
+      blog.isPrivate = !blog.isPrivate
+      await this.blogsRepository.save(blog)
     } catch (error) {
       throw new BadRequestException(error)
     }

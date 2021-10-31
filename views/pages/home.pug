@@ -24,6 +24,8 @@ block main
       .blog-item(onclick=`location.href='/blog/${blog.slug}';`)
         .blog-item-date
           span=String(blog.createdAt).split(' ').slice(0, 4).join('.')
+          if hasPermission && blog.isPrivate
+            img(class="blog-private-image", src="/static/images/private.svg", alt="is-private")
         .blog-item-title=blog.title
         .blog-item-description=blog.description
         //- 블로그에 해당하는 태그들 issue #13

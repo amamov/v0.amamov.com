@@ -52,6 +52,7 @@ export class AppController {
           },
           tagName,
           searchKeyword,
+          hasPermission,
         ),
         this.tagsService.findAllTagWithBlog(),
       ])
@@ -75,5 +76,10 @@ export class AppController {
   @Get('uploads')
   redirectUpload(@Res() res: Response) {
     res.redirect('/blog/v1/uploads')
+  }
+
+  @Get('favicon.ico')
+  getFavicon() {
+    return '/static/favicon.ico'
   }
 }
