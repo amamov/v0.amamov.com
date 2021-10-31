@@ -15,6 +15,7 @@ export class BlogsService {
     pagenationOptions: IPaginationOptions,
     tagName = '',
     searchKeyword = '',
+    hasPermission = false,
   ) {
     let { limit, page } = pagenationOptions
     limit = limit > 10 ? 10 : Number(limit)
@@ -33,6 +34,8 @@ export class BlogsService {
     // .leftJoinAndSelect('b.tags', 't') // issue : #13
     // .offset((page - 1) * limit)
     // .limit(limit)
+
+    if (!hasPermission) blogsQueryBuilder.andWhere('b.isPrivate = false')
 
     if (tagName)
       blogsQueryBuilder.leftJoin('b.tags', 't').andWhere('t.name = :tagName', {

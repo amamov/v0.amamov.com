@@ -4,7 +4,9 @@ import {
   Controller,
   Get,
   Logger,
+  NotFoundException,
   Param,
+  Patch,
   Post,
   Render,
   UploadedFile,
@@ -46,6 +48,30 @@ export class BlogsController {
     private readonly awsService: AwsService,
   ) {}
 
+  // TODO
+  @Get('v1/update/:blogSlug')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(new OnlyAdminInterceptor())
+  @Render('pages/blog-update')
+  async getBlogUpdate(@Param('blogSlug') blogSlug: string) {
+    try {
+      const blog = await this.blogsRepository
+        .createQueryBuilder('b')
+        .leftJoinAndSelect('b.tags', 't')
+        .getOne()
+
+      // TODO
+
+      return {
+        title: 'amamov | update',
+        blogTitle: blog.title,
+        tags: blog.tags,
+      }
+    } catch (error) {
+      throw new BadRequestException(error)
+    }
+  }
+
   @Get('v1/uploads')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(new OnlyAdminInterceptor())
@@ -77,6 +103,7 @@ export class BlogsController {
         await this.blogsRepository.save(blog)
         context.blogId = blog.id
       }
+      return context
     } catch (error) {
       throw new BadRequestException(error)
     }
@@ -111,6 +138,7 @@ export class BlogsController {
       return {
         title: blog.title,
         hasPermission,
+        slug: blog.slug,
         contents: blog.contents,
         blogTitle: blog.title,
         createdAt: blog.createdAt,
@@ -119,8 +147,8 @@ export class BlogsController {
         tags: blog.tags.map((tag) => tag.name),
       }
     } catch (error) {
-      throw new BadRequestException(error)
-      // throw new NotFoundException(error)
+      // throw new BadRequestException(error)
+      throw new NotFoundException(error)
     }
   }
 
@@ -222,6 +250,35 @@ export class BlogsController {
       })
       await this.blogImagesRepository.save(blogImage)
       return { image: this.awsService.getAwsS3FileUrl(blogImage.image) }
+    } catch (error) {
+      throw new BadRequestException(error)
+    }
+  }
+
+  @Patch('private/:blogSlug')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(new OnlyAdminInterceptor())
+  @UseFilters(new HttpApiExceptionFilter())
+  async togglePrivate(@Param('blogSlug') blogSlug: string) {
+    try {
+      const blog = await this.blogsRepository.findOne({ slug: blogSlug })
+      blog.isPrivate = !blog.isPrivate
+      await this.blogsRepository.save(blog)
+    } catch (error) {
+      throw new BadRequestException(error)
+    }
+  }
+
+  @Post('save')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(new OnlyAdminInterceptor())
+  @UseFilters(new HttpApiExceptionFilter())
+  async saveBlog(
+    @CurrentUser() currentUser: UserDTO,
+    @Body(new BlogUploadBodyPipe()) uploadData: BlogUploadDTO,
+  ): Promise<void> {
+    try {
+      this.logger.debug('save')
     } catch (error) {
       throw new BadRequestException(error)
     }

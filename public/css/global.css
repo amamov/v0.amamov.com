@@ -74,6 +74,13 @@ hr.divider-line {
   margin: 48px 0;
 }
 
+.blog-private-image {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  margin-left: 8px;
+}
+
 #wrapper {
   display: flex;
   flex-direction: column;

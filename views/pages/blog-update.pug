@@ -13,10 +13,6 @@ block main
     h4 &lt;Blog Title /&gt;
     input(required class="form-control mb-5 bg-color-inherit" type="text" id="blog-title-input" name="title" placeholder="제목을 입력해주세요.")
 
-    //- h4 &lt;Blog Thumbnail /&gt;
-    //- input(required class="form-control mb-2 bg-color-inherit" type="file" accept="image/*" id="blog-thumbnail-input" name="thumbnail")
-    //- #blog-thumbnail-preview(class="mb-5 d-flex justify-content-center")
-
     h4 &lt;Blog Tags /&gt;
     input(class="form-control mb-5 bg-color-inherit" type="text" id="blog-tags-input" name="tags" placeholder="# 기준으로 태그를 입력해주세요. ex. #python #javascript")
 
@@ -30,9 +26,7 @@ block main
     h4 &lt;Blog Poster /&gt;
     #editor
     #blog-submit-bt
-      button(type="submit" id="blog-save-bt" class="btn btn-dark mr-2") 임시저장
       button(type="submit" class="btn btn-dark") 업로드
-
 
 block script
   script(src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.3/purify.min.js" integrity="sha512-gtcrasYnyeB27+IejClswFlb/eggt+khRr+lLAeNcgg5x2ijlWaiBOPXZkwivNj15LaE6s9CzV57hsoTPrQ5xg==" crossorigin="anonymous" referrerpolicy="no-referrer")
@@ -40,4 +34,6 @@ block script
   script(src="https://uicdn.toast.com/editor/3.1.0/toastui-editor-all.min.js")
   script(src="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight-all.min.js")
   script(src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.13/katex.min.js")
+  script.
+    const initialContents = !{JSON.stringify(initialValue)}
   script(src="/static/js/blog-upload.js")

@@ -1,0 +1,65 @@
+extends ../layout/base.pug
+
+block style
+  link(rel="stylesheet" href="https://uicdn.toast.com/editor/3.1.0/toastui-editor.min.css")
+  link(rel="stylesheet" href="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/3.0.0/toastui-editor-plugin-code-syntax-highlight.min.css")
+  link(rel="stylesheet" href="/static/css/pages/proflie-detail.css")
+
+block main
+  include ../components/profile.pug
+  hr.divider-line
+  aside#blog-tag-aside
+    #blog-tag-title Hashtag
+    ul#blog-tag-list
+      for tag in tags
+        - const tagHref = `/?tag=${tag.name}`
+        li
+          if tag.name === currentTag
+            a.blog-tag.blog-current-tag(href=tagHref) #{tag.name} (#{tag.blogs})
+          else
+            a.blog-tag(href=tagHref) #{tag.name} (#{tag.blogs})
+  section#profile-detail-section
+    if hasPermission
+      a(href=`/users/v1/update`)
+        img.profile-update-link(src="/static/images/edit-button.svg", alt="is-public")
+    h1=userBio
+    if contents
+      #viewer
+    else
+      #empty-message
+        h3=emptyMessage
+  hr.divider-line
+
+  aside#blog-tag-aside-bottom 
+    ul#blog-tag-list-bottom
+      for tag in tags
+        li
+          if tag.name === currentTag
+            a.blog-tag.blog-current-tag(href=`/?tag=${tag.name}`) ##{tag.name}
+          else
+            a.blog-tag(href=`/?tag=${tag.name}`) ##{tag.name} 
+
+
+block script
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.3/purify.min.js" integrity="sha512-gtcrasYnyeB27+IejClswFlb/eggt+khRr+lLAeNcgg5x2ijlWaiBOPXZkwivNj15LaE6s9CzV57hsoTPrQ5xg==" crossorigin="anonymous" referrerpolicy="no-referrer")
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.23.0/axios.min.js" integrity="sha512-Idr7xVNnMWCsgBQscTSCivBNWWH30oo/tzYORviOCrLKmBaRxRflm2miNhTFJNVmXvCtzgms5nlJF4az2hiGnA==" crossorigin="anonymous" referrerpolicy="no-referrer")
+  script(src="https://uicdn.toast.com/editor/3.1.0/toastui-editor-all.min.js")
+  script(src="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/3.0.0/toastui-editor-plugin-code-syntax-highlight-all.min.js")
+  script.
+    const Viewer = toastui.Editor
+    const { codeSyntaxHighlight } = Viewer.plugin
+    const viewer = Viewer.factory({
+      el: document.querySelector('#viewer'),
+      height: '100%',
+      initialValue: !{JSON.stringify(contents)},
+      plugins: [[codeSyntaxHighlight, { highlighter: Prism }]],
+      usageStatistics: false,
+      viewer: true,
+      customHTMLSanitizer: (html) => {
+        return DOMPurify.sanitize(html, {
+          ADD_TAGS: ['iframe'],
+          ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling'],
+        })
+      },
+    })
+

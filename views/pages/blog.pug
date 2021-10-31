@@ -2,7 +2,7 @@ extends ../layout/base.pug
 
 block style
   link(rel="stylesheet" href="https://uicdn.toast.com/editor/3.1.0/toastui-editor.min.css")
-  link(rel="stylesheet" href="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.css")
+  link(rel="stylesheet" href="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/3.0.0/toastui-editor-plugin-code-syntax-highlight.min.css")
   link(rel="stylesheet" href="/static/css/pages/blog.css")
 
 block main
@@ -11,14 +11,21 @@ block main
   aside#blog-tag-aside 
     ul#blog-tag-list
       for tag in tags
-        - const tagHref = `/?tag=${tag}`
         li
-          a.blog-tag(href=tagHref) ##{tag}
+          a.blog-tag(href=`/?tag=${tag}`) ##{tag}
   - const humanCreatedAt = createdAt.toLocaleDateString().split('. ')
   - const monthCreatedAt = humanCreatedAt[1]
   - const dayCreatedAt = humanCreatedAt[2].replace('.', '')
   - const yearCreatedAt = humanCreatedAt[0]
   p#updated-at #{yearCreatedAt}년 #{monthCreatedAt}월 #{dayCreatedAt}일
+  if hasPermission
+    a.blog-update-link(href=`/blog/v1/update/${slug}`)
+      img(id="blog-update-image", src="/static/images/edit-button.svg", alt="is-public")
+    if isPrivate
+      img(id="blog-private-image", class="blog-private-image", src="/static/images/private.svg", alt="is-private")
+    else
+      img(id="blog-public-image", class="blog-private-image", src="/static/images/public.svg", alt="is-public")
+
   hr.divider-line
   #viewer
   include ../components/profile.pug
@@ -29,7 +36,7 @@ block script
   script(src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.3/purify.min.js" integrity="sha512-gtcrasYnyeB27+IejClswFlb/eggt+khRr+lLAeNcgg5x2ijlWaiBOPXZkwivNj15LaE6s9CzV57hsoTPrQ5xg==" crossorigin="anonymous" referrerpolicy="no-referrer")
   script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.23.0/axios.min.js" integrity="sha512-Idr7xVNnMWCsgBQscTSCivBNWWH30oo/tzYORviOCrLKmBaRxRflm2miNhTFJNVmXvCtzgms5nlJF4az2hiGnA==" crossorigin="anonymous" referrerpolicy="no-referrer")
   script(src="https://uicdn.toast.com/editor/3.1.0/toastui-editor-all.min.js")
-  script(src="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight-all.min.js")
+  script(src="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/3.0.0/toastui-editor-plugin-code-syntax-highlight-all.min.js")
   script.
     const Viewer = toastui.Editor
     const { codeSyntaxHighlight } = Viewer.plugin
@@ -47,5 +54,25 @@ block script
         })
       },
     })
+    const blogPrivateImg = document.getElementById('blog-private-image')
+    const blogPublicImg = document.getElementById('blog-public-image')
+    const slug = !{JSON.stringify(slug)}
+    const handleImgClick = async (message) => {
+      if (window.confirm(message)) {
+        try {
+          const response = await axios.patch(`/blog/private/${slug}`)
+          console.log(response.data)
+          location.reload();
+        } catch (error) {
+          alert(error)
+        }
+      }
+    }
+    if (blogPrivateImg)
+      blogPrivateImg.addEventListener('click', () => handleImgClick('비공개에서 공개로 전환할래요?'))
+    if (blogPublicImg)
+      blogPublicImg.addEventListener('click', () => handleImgClick('공개에서 비공개로 전환할래요?'))
+
+
 
 

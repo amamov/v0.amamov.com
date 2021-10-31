@@ -1,0 +1,23 @@
+@import url('/static/css/profile.css');
+@import url('/static/css/tag.css');
+@import url('/static/css/editor.css');
+@import url('/static/css/code.css');
+
+section#profile-detail-section {
+  min-height: 70vh;
+}
+
+#empty-message {
+  color: var(--color-dark);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 40vh;
+}
+
+.profile-update-link {
+  width: 25px;
+  height: auto;
+}
