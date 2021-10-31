@@ -69,4 +69,12 @@ export class UsersService {
       throw new BadRequestException('해당하는 사용자를 찾을 수 없습니다.')
     }
   }
+
+  async findAdminUser() {
+    try {
+      return await this.usersRepository.findOne({ isAdmin: true })
+    } catch (error) {
+      throw new BadRequestException('해당하는 사용자를 찾을 수 없습니다.')
+    }
+  }
 }

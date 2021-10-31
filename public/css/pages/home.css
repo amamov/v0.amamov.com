@@ -1,4 +1,5 @@
 @import url('/static/css/profile.css');
+@import url('/static/css/tag.css');
 
 ul {
   list-style: none;
@@ -69,72 +70,6 @@ ul.blog-tag-list-self {
 
 .blog-tag-self:hover {
   color: var(--color-big-dark);
-}
-
-/***************** blog tag section *****************/
-main {
-  position: relative;
-}
-
-aside#blog-tag-aside {
-  position: absolute;
-  /* left: -200px; */
-  right: -250px;
-  width: 184px;
-  padding: 10px;
-  word-break: break-word;
-  box-sizing: border-box;
-}
-
-#blog-tag-title {
-  font-family: var(--font-code);
-  color: var(--color-dark);
-  font-weight: bolder;
-  margin-bottom: 15px;
-}
-
-#blog-tag-list {
-  line-height: 2;
-}
-
-.blog-tag {
-  color: var(--color-dark);
-  font-size: 15px;
-}
-
-.blog-tag:hover {
-  color: var(--color-big-dark);
-}
-
-aside#blog-tag-aside-bottom {
-  display: none;
-}
-
-@media screen and (max-width: 1124px) {
-  aside#blog-tag-aside {
-    display: none;
-  }
-
-  aside#blog-tag-aside-bottom {
-    display: block;
-    margin: 25px 0;
-  }
-
-  #blog-tag-list-bottom {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-  }
-
-  .blog-tag {
-    display: block;
-    margin-right: 10px;
-  }
-}
-
-.blog-current-tag {
-  color: var(--color-big-dark);
-  text-decoration: underline;
 }
 
 /***************** pagination section *****************/

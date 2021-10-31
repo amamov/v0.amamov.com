@@ -10,20 +10,8 @@ block main
   hr
 
   form(id="blog-upload-form")
-    h4 &lt;Blog Title /&gt;
-    input(required class="form-control mb-5 bg-color-inherit" type="text" id="blog-title-input" name="title" placeholder="제목을 입력해주세요.")
 
-    h4 &lt;Blog Tags /&gt;
-    input(class="form-control mb-5 bg-color-inherit" type="text" id="blog-tags-input" name="tags" placeholder="# 기준으로 태그를 입력해주세요. ex. #python #javascript")
-
-    h4 &lt;Blog Description /&gt;
-    textarea(required class="form-control mb-5 bg-color-inherit" type="text" id="blog-description-input" name="description" placeholder="포스트를 짧게 소개해보세요.")
-
-    h4 &lt;Blog Description /&gt;
-    input(class="mr-2" type="checkbox" id="blog-is-private-input")
-    label(class="form-check-label mb-5 bg-color-inherit" for="blog-is-private-input") 비공개
-
-    h4 &lt;Blog Poster /&gt;
+    h4 &lt;User Bio /&gt;
     #editor
     #blog-submit-bt
       button(type="submit" class="btn btn-dark") 업로드
@@ -35,5 +23,5 @@ block script
   script(src="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight-all.min.js")
   script(src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.13/katex.min.js")
   script.
-    const initialContents = !{JSON.stringify(initialValue)}
-  script(src="/static/js/blog-upload.js")
+    const initialValue = !{JSON.stringify(initialValue)}
+  script(src="/static/js/profile-update.js")

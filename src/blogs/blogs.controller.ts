@@ -54,9 +54,19 @@ export class BlogsController {
   @UseInterceptors(new OnlyAdminInterceptor())
   @Render('pages/blog-update')
   async getBlogUpdate(@Param('blogSlug') blogSlug: string) {
-    const context = { title: 'amamov | update' }
     try {
-      return context
+      const blog = await this.blogsRepository
+        .createQueryBuilder('b')
+        .leftJoinAndSelect('b.tags', 't')
+        .getOne()
+
+      // TODO
+
+      return {
+        title: 'amamov | update',
+        blogTitle: blog.title,
+        tags: blog.tags,
+      }
     } catch (error) {
       throw new BadRequestException(error)
     }

@@ -1,3 +1,4 @@
+import { UserEntity } from './users/users.entity'
 import {
   BadRequestException,
   Controller,
@@ -19,6 +20,7 @@ import { JwtAuthGuard } from './users/jwt/jwt.guard'
 import { IPaginationMeta, Pagination } from 'nestjs-typeorm-paginate'
 import { BlogEntity } from './blogs/blogs.entity'
 import { TagEntity } from './tags/tags.entity'
+import { UsersService } from './users/users.service'
 
 @Controller()
 export class AppController {
@@ -27,6 +29,7 @@ export class AppController {
   constructor(
     private readonly blogsService: BlogsService,
     private readonly tagsService: TagsService,
+    private readonly usersService: UsersService,
   ) {}
 
   @Get()
@@ -81,5 +84,29 @@ export class AppController {
   @Get('favicon.ico')
   getFavicon() {
     return '/static/favicon.ico'
+  }
+
+  @Get('profile')
+  @UseGuards(JwtAuthGuard)
+  @Render('pages/profile-detail')
+  async getProfile(@CurrentUser() currentUser: UserDTO | null) {
+    let hasPermission = false
+    if (currentUser && currentUser.isAdmin) hasPermission = true
+    let tags: TagEntity[]
+    let user: UserEntity
+    try {
+      tags = await this.tagsService.findAllTagWithBlog()
+      user = await this.usersService.findAdminUser()
+    } catch (error) {
+      this.logger.error(error)
+      throw new BadRequestException(error)
+    }
+    return {
+      title: 'amamov | 윤상석',
+      hasPermission,
+      contents: user.bio || '',
+      tags: tags.map((tag) => ({ ...tag, blogs: tag.blogs.length })),
+      emptyMessage: '소개가 작성되지 않았습니다. 🙄',
+    }
   }
 }

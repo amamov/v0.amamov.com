@@ -1,5 +1,7 @@
 'use-strict'
 
+//* global var : initialValue
+
 //* toast-ui editor */
 const Editor = toastui.Editor
 const { codeSyntaxHighlight } = Editor.plugin

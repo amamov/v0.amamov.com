@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -9,6 +10,7 @@ import {
   Render,
   Res,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common'
 import { Response } from 'express'
 import { CurrentUser } from '@common/decorators/current-user.decorator'
@@ -17,12 +19,20 @@ import { UsersService } from './users.service'
 import { UserLogInDTO } from './dtos/user-login.dto'
 import { UserDTO } from './dtos/user.dto'
 import { UserRegisterDTO } from './dtos/user-register.dto'
+import { OnlyAdminInterceptor } from '@common/interceptors/only-admin.interceptor'
+import { InjectRepository } from '@nestjs/typeorm'
+import { UserEntity } from './users.entity'
+import { Repository } from 'typeorm'
 
 @Controller()
 export class UsersController {
   private readonly logger = new Logger(UsersController.name)
 
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    @InjectRepository(UserEntity)
+    private readonly usersRepository: Repository<UserEntity>,
+  ) {}
 
   @Post('users')
   async signUp(@Body() body: UserRegisterDTO) {
@@ -53,5 +63,33 @@ export class UsersController {
   @Redirect('/')
   async logOut(@Res({ passthrough: true }) response: Response) {
     response.clearCookie('jwt')
+  }
+
+  @Get('users/v1/update')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(new OnlyAdminInterceptor())
+  @Render('pages/user-update')
+  async getUserUpdatePage(@CurrentUser() currentUser: UserDTO) {
+    return {
+      title: 'amamov | profile update',
+      initialValue: currentUser.bio || '',
+    }
+  }
+
+  @Post('users/v1/update')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(new OnlyAdminInterceptor())
+  async updateUserUpdatePage(
+    @CurrentUser() currentUser: UserDTO,
+    @Body('contents') bio: string,
+  ) {
+    const user = await this.usersService.findUserById(currentUser.id)
+    user.bio = bio
+    try {
+      await this.usersRepository.save(user)
+    } catch (error) {
+      this.logger.error(error)
+      throw new BadRequestException(error)
+    }
   }
 }
