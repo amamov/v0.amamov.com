@@ -28,6 +28,10 @@ block main
 
   hr.divider-line
   #viewer
+  .go-blog-list 
+    div(onclick="location.href='/';")
+      img(src="/static/images/list.svg" alt="list-icon" width="20px" height="20px")
+      span 목록
   include ../components/profile.pug
   hr.divider-line
   script(src="https://utteranc.es/client.js" repo="amamov/amamov-comments" issue-term="pathname" label="amamov.com" theme="photon-dark" crossorigin="anonymous" async)
