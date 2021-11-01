@@ -19,7 +19,7 @@ block main
   //- - const dayCreatedAt = humanCreatedAt[2]
   //- - const dayCreatedAt = humanCreatedAt[2].replace('.', '')
   //- - const yearCreatedAt = humanCreatedAt[0]
-  p#updated-at #{yearCreatedAt}년 #{monthCreatedAt}월 #{dayCreatedAt}일
+  //- p#updated-at #{yearCreatedAt}년 #{monthCreatedAt}월 #{dayCreatedAt}일
   p#updated-at #{createdAt} | #{createdAt.toLocaleDateString()}
   if hasPermission
     a.blog-update-link(href=`/blog/v1/update/${slug}`)

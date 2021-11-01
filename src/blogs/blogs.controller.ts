@@ -30,19 +30,23 @@ import { BlogUploadDTO } from './dtos/blog-upload.dto'
 import { ClientIp } from '@common/decorators/client-real-ip.decorator'
 import { VisitorEntity } from 'src/visitors/visitors.entity'
 import { BlogsService } from './blogs.service'
-import { Repository } from 'typeorm'
+import { Connection, Repository } from 'typeorm'
+import { TagEntity } from 'src/tags/tags.entity'
 
 @Controller('blog')
 export class BlogsController {
   private logger = new Logger(BlogsController.name)
 
   constructor(
+    private readonly ormConnection: Connection,
     @InjectRepository(VisitorEntity)
     private readonly visitorsRepository: Repository<VisitorEntity>,
     @InjectRepository(BlogEntity)
     private readonly blogsRepository: Repository<BlogEntity>,
     @InjectRepository(BlogImageEntity)
     private readonly blogImagesRepository: Repository<BlogImageEntity>,
+    @InjectRepository(TagEntity)
+    private readonly tagsRepository: Repository<TagEntity>,
     private readonly blogsService: BlogsService,
     private readonly awsService: AwsService,
   ) {}
@@ -178,7 +182,45 @@ export class BlogsController {
   @UseInterceptors(new OnlyAdminInterceptor())
   @UseFilters(new HttpApiExceptionFilter())
   async deleteBlog(@Param('blogId') blogId: string): Promise<void> {
-    await this.blogsRepository.delete(blogId)
+    const queryRunner = this.ormConnection.createQueryRunner()
+    await queryRunner.connect()
+    await queryRunner.startTransaction()
+    try {
+      const blog = await queryRunner.manager
+        .getRepository(BlogEntity)
+        .createQueryBuilder('b')
+        .where('b.id = :id', { id: blogId })
+        .leftJoinAndSelect('b.tags', 't')
+        .getOne()
+      let tags = blog.tags
+      await queryRunner.manager.getRepository(BlogEntity).delete(blogId)
+      tags = await Promise.all(
+        tags.map(async (tag) => {
+          const _tag = await queryRunner.manager
+            .getRepository(TagEntity)
+            .createQueryBuilder('t')
+            .where('t.id = :id', { id: tag.id })
+            .leftJoinAndSelect('t.blogs', 'tb')
+            .getOne()
+          if (_tag.blogs.length === 0) return _tag
+        }),
+      )
+      tags = tags.filter((tag) => tag !== undefined)
+      if (tags.length !== 0) {
+        await Promise.all(
+          tags.map(
+            async (tag) =>
+              await queryRunner.manager.getRepository(TagEntity).delete(tag.id),
+          ),
+        )
+      }
+      await queryRunner.commitTransaction()
+    } catch (error) {
+      await queryRunner.rollbackTransaction()
+      throw new BadRequestException(error)
+    } finally {
+      await queryRunner.release()
+    }
   }
 
   @Post('update/:blogId')
