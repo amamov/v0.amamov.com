@@ -14,12 +14,7 @@ block main
       for tag in tags
         li
           a.blog-tag(href=`/?tag=${tag}`) ##{tag}
-  - const humanCreatedAt = createdAt.toLocaleDateString('ko-KR').split('. ')
-  - const monthCreatedAt = humanCreatedAt[1]
-  - const dayCreatedAt = humanCreatedAt[2]
-  - const dayCreatedAt = humanCreatedAt[2].replace('.', '')
-  - const yearCreatedAt = humanCreatedAt[0]
-  p#updated-at #{yearCreatedAt}년 #{monthCreatedAt}월 #{dayCreatedAt}일
+  p#updated-at #{createdAt.toLocaleDateString('ko-KR')}
   if hasPermission
     a.blog-update-link(href=`/blog/v1/update/${slug}`)
       img(id="blog-update-image", src="/static/images/edit-button.svg", alt="is-public")
