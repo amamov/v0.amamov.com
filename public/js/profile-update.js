@@ -67,10 +67,10 @@ const profileUploadForm = document.getElementById('blog-upload-form')
 const handleUploadSubmit = async (event) => {
   event.preventDefault()
   if (window.confirm('업로드 하시겠습니까?')) {
-    const html = editor.getHTML()
+    const markdown = editor.getMarkdown()
     try {
       await axios.post('/users/v1/update', {
-        contents: html,
+        contents: markdown,
       })
       alert('업로드 성공!')
       location.href = '/profile'

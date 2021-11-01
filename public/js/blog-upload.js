@@ -117,8 +117,9 @@ const handleBlogTitleChange = ({ target: { value } }) => {
 const handleBlogUploadSubmit = async (event) => {
   event.preventDefault()
   if (window.confirm('업로드 하시겠습니까?')) {
-    const html = editor.getHTML()
-    if (!html) {
+    // const html = editor.getHTML()
+    const markdown = editor.getMarkdown()
+    if (!markdown) {
       alert('글을 작성해주세요.')
       return
     }
@@ -128,7 +129,7 @@ const handleBlogUploadSubmit = async (event) => {
         description,
         tags,
         isPrivate,
-        contents: html,
+        contents: markdown,
       })
       window.removeEventListener('beforeunload', beforeUnloadListener, {
         capture: true,

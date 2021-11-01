@@ -15,6 +15,10 @@ iframe {
   }
 }
 
+.toastui-editor-mode-switch {
+  display: none !important;
+}
+
 /** color and border **/
 .toastui-editor-contents p {
   color: var(--color-dark) !important;
@@ -29,11 +33,7 @@ h4 {
 }
 
 .toastui-editor-contents hr {
-  border-top: 1px solid var(--color-dark) !important;
-}
-
-.ProseMirror {
-  color: var(--color-dark) !important;
+  border-top: 1px solid #343a40 !important;
 }
 
 .toastui-editor-md-code-block-line-background {
@@ -125,34 +125,39 @@ h4 {
 
 /** font-size **/
 
+.toastui-editor-md-heading1,
 .toastui-editor-contents h1 {
   font-size: 40px;
   margin: 26.5px 0 16px 0;
   line-height: 1.2;
 }
 
+.toastui-editor-md-heading2,
 .toastui-editor-contents h2 {
   font-size: 32px;
   margin: 26.5px 0 16px 0;
   line-height: 1.2;
 }
 
+.toastui-editor-md-heading3,
 .toastui-editor-contents h3 {
   font-size: 24px;
   margin: 24px 0 16px 0;
   line-height: 1.2;
 }
 
+toastui-editor-md-heading4,
 .toastui-editor-contents h4,
 .toastui-editor-contents p {
   font-size: 18px;
   line-height: 1.5;
 }
 
+toastui-editor-md-block-quote,
 .toastui-editor-contents blockquote {
   background-color: var(--bg-code-dark);
   box-sizing: border-box !important;
-  height: 62px;
+  min-height: 62px;
   margin: 32px 0;
   padding: 16px 16px 16px 32px;
 }
@@ -181,4 +186,15 @@ h4 {
     margin: 32px 0;
     padding: 16px 16px 16px 32px;
   }
+}
+
+/** editor **/
+
+.ProseMirror {
+  color: var(--color-dark) !important;
+  font-size: 18px !important;
+}
+
+#editor {
+  min-height: 120vh !important;
 }

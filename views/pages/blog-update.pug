@@ -3,7 +3,7 @@ extends ../layout/base
 block style
   link(rel="stylesheet" href="https://uicdn.toast.com/editor/3.1.0/toastui-editor.min.css")
   link(rel="stylesheet" href="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.css")
-  link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.13/katex.min.css")
+  //- link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.13/katex.min.css")
   link(rel="stylesheet" href="/static/css/pages/uploader.css")
 
 block main
@@ -36,10 +36,10 @@ block script
   script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.23.0/axios.min.js" integrity="sha512-Idr7xVNnMWCsgBQscTSCivBNWWH30oo/tzYORviOCrLKmBaRxRflm2miNhTFJNVmXvCtzgms5nlJF4az2hiGnA==" crossorigin="anonymous" referrerpolicy="no-referrer")
   script(src="https://uicdn.toast.com/editor/3.1.0/toastui-editor-all.min.js")
   script(src="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight-all.min.js")
-  script(src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.13/katex.min.js")
+  //- script(src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.13/katex.min.js")
   script.
     const blogId = !{JSON.stringify(blogId)}
-    const blogInitialContents = !{JSON.stringify(blogInitialContents)}
+    let blogInitialContents = !{JSON.stringify(blogInitialContents)}
     const blogTitleInputEleDefaultValue = !{JSON.stringify(blogTitle)}
     const blogTagsInputEleDefaultValue = !{JSON.stringify(tags)}
     const blogDescriptionInputEleDefaultValue = !{JSON.stringify(description)}
