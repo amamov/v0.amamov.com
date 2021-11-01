@@ -16,6 +16,11 @@ ul {
   height: 40vh;
 }
 
+#empty-message > h4 {
+  margin-top: 5px;
+  color: var(--color-dark);
+}
+
 /***************** blog list section *****************/
 
 section#blog-list-section {

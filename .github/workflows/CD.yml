@@ -1,0 +1,39 @@
+name: CD workflow 1.0.0 # version up!
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: CHECK ROOT PATH
+        run: ls -a
+      - name: DOCKER VERSION CHECK
+        run: docker --version
+      - name: DOCKER LOGIN
+        run: export CR_PAT=${{ secrets.PCK_KEY }} && echo $CR_PAT | docker login -u amamov --password-stdin
+      - name: DOCKERIZING, PUSH
+        run: sh dockerizing.sh 1.0.0 # version up!
+      - name: SSH CONNECT AND DEPLOY
+        uses: fifsky/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }} # 321.321.321.321
+          username: ${{ secrets.SSH_USERNAME }} # username
+          pass: ${{ secrets.SSH_PASSWORD }} # password
+          command: |
+            cd /home/amamov/server/amamovcom
+            ls -a
+            docker --version
+            git pull
+            docker --version
+            echo "docker login..."
+            export CR_PAT=${{ secrets.PCK_KEY }} && echo $CR_PAT | docker login -u amamov --password-stdin
+            echo "docker-compose up..."
+            docker-compose up -d --build
+            echo "Success Deploy :)"
+            docker-compose logs app

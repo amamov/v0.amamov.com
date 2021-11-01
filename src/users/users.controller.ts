@@ -9,6 +9,7 @@ import {
   Redirect,
   Render,
   Res,
+  UseFilters,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common'
@@ -23,6 +24,7 @@ import { OnlyAdminInterceptor } from '@common/interceptors/only-admin.intercepto
 import { InjectRepository } from '@nestjs/typeorm'
 import { UserEntity } from './users.entity'
 import { Repository } from 'typeorm'
+import { HttpApiExceptionFilter } from '@common/exceptions/http-api-exception.filter'
 
 @Controller()
 export class UsersController {
@@ -35,6 +37,7 @@ export class UsersController {
   ) {}
 
   @Post('users')
+  @UseFilters(new HttpApiExceptionFilter())
   async signUp(@Body() body: UserRegisterDTO) {
     return this.usersService.registerUser(body)
   }
@@ -79,6 +82,7 @@ export class UsersController {
   @Post('users/v1/update')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(new OnlyAdminInterceptor())
+  @UseFilters(new HttpApiExceptionFilter())
   async updateUserUpdatePage(
     @CurrentUser() currentUser: UserDTO,
     @Body('contents') bio: string,
