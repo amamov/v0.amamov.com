@@ -48,9 +48,10 @@ export class AwsService {
         const sharpFormat = (originFormat === 'jpg' ? 'jpeg' : originFormat) as
           | keyof sharp.FormatEnum
           | sharp.AvailableFormatInfo
-        const originKey = `${folder}/${Date.now()}_${width}x${height}_${path.basename(
-          file.originalname,
-        )}` // ex. users/wow.hello.jpg
+        const originKey =
+          `${folder}/${Date.now()}_${width}x${height}_${path.basename(
+            file.originalname,
+          )}`.replace(/ /g, '') // ex. users/wow.hello.jpg
         const sharpKey = `${originKey
           .split('.')
           .slice(0, -1)
@@ -75,7 +76,7 @@ export class AwsService {
       } else {
         const key = `${folder}/${Date.now()}_${path.basename(
           file.originalname,
-        )}`
+        )}`.replace(/ /g, '')
         const s3Object = await this.awsS3
           .putObject({
             Bucket: this.S3_BUCKET_NAME,
