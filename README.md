@@ -11,7 +11,7 @@ Following items are core technologies used in this project:
 - PostgreSQL
 - Vanilla JS
 - Pug
-- AWS S3, Cloudflare, Cloudfront
+- AWS S3, Cloudflare, Cloudfront, VPS
 
 ## next step
 

@@ -34,7 +34,7 @@ const typeOrmModuleOptions = {
     ],
     synchronize: true,
     autoLoadEntities: true,
-    logging: true,
+    logging: configService.get('NODE_ENV') === 'production' ? false : true,
     keepConnectionAlive: true,
   }),
   inject: [ConfigService],
