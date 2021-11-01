@@ -12,7 +12,9 @@ export class VisitorEntity extends CommonEntity {
   @Column({ type: 'inet', nullable: false })
   ip: string
 
-  @ManyToOne(() => BlogEntity, (blog: BlogEntity) => blog.visitors)
+  @ManyToOne(() => BlogEntity, (blog: BlogEntity) => blog.visitors, {
+    onDelete: 'SET NULL',
+  })
   @JoinColumn([{ name: 'blog_id', referencedColumnName: 'id' }])
   blog: BlogEntity
 }

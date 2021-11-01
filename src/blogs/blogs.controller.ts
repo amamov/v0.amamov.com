@@ -114,7 +114,6 @@ export class BlogsController {
     }
   }
 
-  // TODO : VISITOR
   @Get(':slug')
   @Render('pages/blog')
   @UseGuards(JwtAuthGuard)
@@ -179,7 +178,7 @@ export class BlogsController {
   @UseInterceptors(new OnlyAdminInterceptor())
   @UseFilters(new HttpApiExceptionFilter())
   async deleteBlog(@Param('blogId') blogId: string): Promise<void> {
-    await this.blogsRepository.softDelete(blogId)
+    await this.blogsRepository.delete(blogId)
   }
 
   @Post('update/:blogId')
