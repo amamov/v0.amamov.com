@@ -20,6 +20,7 @@ module.exports = {
   logging: true,
   namingStrategy: new SnakeNamingStrategy(),
   entities: [UserEntity, BlogEntity, BlogImageEntity, TagEntity, VisitorEntity],
+
   // entities: ['src/**/*.entity.ts'],
   migrations: ['migrations/**/*.ts'],
   cli: { migrationsDir: 'migrations' },

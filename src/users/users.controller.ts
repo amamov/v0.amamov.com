@@ -19,7 +19,7 @@ import { JwtAuthGuard } from './jwt/jwt.guard'
 import { UsersService } from './users.service'
 import { UserLogInDTO } from './dtos/user-login.dto'
 import { UserDTO } from './dtos/user.dto'
-import { UserRegisterDTO } from './dtos/user-register.dto'
+// import { UserRegisterDTO } from './dtos/user-register.dto'
 import { OnlyAdminInterceptor } from '@common/interceptors/only-admin.interceptor'
 import { InjectRepository } from '@nestjs/typeorm'
 import { UserEntity } from './users.entity'
@@ -36,11 +36,11 @@ export class UsersController {
     private readonly usersRepository: Repository<UserEntity>,
   ) {}
 
-  @Post('users')
-  @UseFilters(new HttpApiExceptionFilter())
-  async signUp(@Body() body: UserRegisterDTO) {
-    return this.usersService.registerUser(body)
-  }
+  // @Post('users')
+  // @UseFilters(new HttpApiExceptionFilter())
+  // async signUp(@Body() body: UserRegisterDTO) {
+  //   return this.usersService.registerUser(body)
+  // }
 
   @Get('login')
   @UseGuards(JwtAuthGuard)
