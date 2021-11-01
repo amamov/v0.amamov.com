@@ -104,7 +104,7 @@ export class AppController {
     return {
       title: 'amamov | 윤상석',
       hasPermission,
-      contents: user.bio || '',
+      contents: user?.bio || '',
       tags: tags.map((tag) => ({ ...tag, blogs: tag.blogs.length })),
       emptyMessage: '소개가 작성되지 않았습니다. 🙄',
     }
