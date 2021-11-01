@@ -1,5 +1,6 @@
 extends ../layout/base.pug
 
+
 block style
   link(rel="stylesheet" href="https://uicdn.toast.com/editor/3.1.0/toastui-editor.min.css")
   link(rel="stylesheet" href="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/3.0.0/toastui-editor-plugin-code-syntax-highlight.min.css")
@@ -13,11 +14,13 @@ block main
       for tag in tags
         li
           a.blog-tag(href=`/?tag=${tag}`) ##{tag}
-  - const humanCreatedAt = createdAt.toLocaleDateString().split('. ')
-  - const monthCreatedAt = humanCreatedAt[1]
-  - const dayCreatedAt = humanCreatedAt[2].replace('.', '')
-  - const yearCreatedAt = humanCreatedAt[0]
+  //- - const humanCreatedAt = createdAt.toLocaleDateString().split('. ')
+  //- - const monthCreatedAt = humanCreatedAt[1]
+  //- - const dayCreatedAt = humanCreatedAt[2]
+  //- - const dayCreatedAt = humanCreatedAt[2].replace('.', '')
+  //- - const yearCreatedAt = humanCreatedAt[0]
   p#updated-at #{yearCreatedAt}년 #{monthCreatedAt}월 #{dayCreatedAt}일
+  p#updated-at #{createdAt} | #{createdAt.toLocaleDateString()}
   if hasPermission
     a.blog-update-link(href=`/blog/v1/update/${slug}`)
       img(id="blog-update-image", src="/static/images/edit-button.svg", alt="is-public")

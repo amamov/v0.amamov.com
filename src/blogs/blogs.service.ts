@@ -26,8 +26,8 @@ export class BlogsService {
     },
   ) {
     let isNew = true
-    if (updateOption && !updateOption.isNew) {
-      isNew = false
+    if (updateOption) {
+      if (!updateOption.isNew) isNew = false
     }
     const queryRunner = this.ormConnection.createQueryRunner()
     await queryRunner.connect()
