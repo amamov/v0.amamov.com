@@ -182,7 +182,7 @@ toastui-editor-md-block-quote,
   }
 
   .toastui-editor-contents blockquote {
-    height: 59px;
+    min-height: 59px;
     margin: 32px 0;
     padding: 16px 16px 16px 32px;
   }
