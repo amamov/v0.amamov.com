@@ -14,7 +14,7 @@ block main
       for tag in tags
         li
           a.blog-tag(href=`/?tag=${tag}`) ##{tag}
-  p#updated-at #{createdAt.toLocaleDateString('ko-KR')}
+  p#updated-at #{createdAt}
   if hasPermission
     a.blog-update-link(href=`/blog/v1/update/${slug}`)
       img(id="blog-update-image", src="/static/images/edit-button.svg", alt="is-public")

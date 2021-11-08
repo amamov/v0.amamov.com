@@ -24,7 +24,7 @@ block main
     for blog in blogs
       .blog-item(onclick=`location.href='/blog/${blog.slug}';`)
         .blog-item-date
-          span=String(blog.createdAt).split(' ').slice(0, 4).join('.')
+          span=blog.createdAt
           if hasPermission && blog.isPrivate
             img(class="blog-private-image", src="/static/images/private.svg", alt="is-private")
         .blog-item-title=blog.title

@@ -21,6 +21,7 @@ import { CurrentUser } from '@common/decorators/current-user.decorator'
 import { HttpApiExceptionFilter } from '@common/exceptions/http-api-exception.filter'
 import { OnlyAdminInterceptor } from '@common/interceptors/only-admin.interceptor'
 import { AwsService } from '@common/services/aws.service'
+import * as moment from 'moment'
 import { UserDTO } from 'src/users/dtos/user.dto'
 import { JwtAuthGuard } from 'src/users/jwt/jwt.guard'
 import { BlogImageEntity } from './blog-images.entity'
@@ -143,14 +144,16 @@ export class BlogsController {
       if (!blog) throw new Error('해당하는 로그를 찾을 수 없습니다.')
       const visitor = this.visitorsRepository.create({ blog, ip: visitorIp })
       await this.visitorsRepository.save(visitor)
+      const createdAt = moment(blog.createdAt).format('YYYY년 MM월 DD일')
+      const updatedAt = moment(blog.updatedAt).format('YYYY년 MM월 DD일')
       return {
         title: blog.title,
         hasPermission,
         slug: blog.slug,
         contents: blog.contents,
         blogTitle: blog.title,
-        createdAt: blog.createdAt,
-        updatedAt: blog.updatedAt,
+        createdAt,
+        updatedAt,
         isPrivate: blog.isPrivate,
         tags: blog.tags.map((tag) => tag.name),
       }

@@ -64,9 +64,16 @@ export class AppController {
       throw new BadRequestException(error)
     }
     return {
-      title: 'amamov | 윤상석',
+      title: '윤상석',
       hasPermission,
-      blogs: blogs.items,
+      blogs: blogs.items.map((blog) => ({
+        id: String(blog.id),
+        slug: blog.slug,
+        createdAt: String(blog.createdAt).split(' ').slice(0, 4).join('.'),
+        isPrivate: blog.isPrivate,
+        title: blog.title,
+        description: blog.description,
+      })),
       currentPage: blogs.meta.currentPage,
       totalPage: blogs.meta.totalPages,
       searchKeyword,
