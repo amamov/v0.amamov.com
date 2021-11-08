@@ -14,16 +14,17 @@ html(lang="en")
   body 
     div.container#wrapper
       include header
-      if hasPermission
-        section(class="row")
-          form(class="col" action='/logout' method='GET' id="logout-form")
-            button(type="button", onclick="location.href='/uploads';", class="btn btn-dark mr-2") Uploads
-            button(type="submit", id="logout-bt", class="btn btn-dark") Logout
-
       main
         block main
       footer
-        #footer_info copyright © 2021 yoon sang seok. all rights reserved.
+        #footer_info copyright © 2021 
+          span(onclick="location.href='/login';" style="cursor:pointer;") yoon 
+          span sang seok. all rights reserved.
+      if hasPermission
+        section
+          form(class="mb-3" action='/logout' method='GET' id="logout-form")
+            button(type="button", onclick="location.href='/uploads';", class="btn btn-dark mr-2") Uploads
+            button(type="submit", id="logout-bt", class="btn btn-dark") Logout
     script.
       const alertMessage = String(!{JSON.stringify(alertMessage)})
       if (alertMessage) alert(alertMessage)

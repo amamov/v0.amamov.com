@@ -90,7 +90,6 @@ hr.divider-line {
 }
 
 #logout-form {
-  margin-top: 13px;
   text-align: end;
 }
 
@@ -107,6 +106,10 @@ hr.divider-line {
   font-size: 28px;
   /* font-weight: bolder; */
   cursor: pointer;
+}
+
+#logo:hover {
+  text-decoration: underline;
 }
 
 #header_form {
