@@ -1,4 +1,4 @@
-name: CD workflow 1.13.0 #! version up!
+name: CD workflow 1.14.0 #! version up!
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
       - name: DOCKER LOGIN
         run: export CR_PAT=${{ secrets.PCK_KEY }} && echo $CR_PAT | docker login -u amamov --password-stdin
       - name: DOCKERIZING, PUSH
-        run: sh dockerizing.sh 1.13.0 #! version up!
+        run: sh dockerizing.sh 1.14.0 #! version up!
       - name: SSH CONNECT AND DEPLOY
         uses: fifsky/ssh-action@master
         with:
