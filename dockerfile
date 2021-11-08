@@ -11,4 +11,4 @@ RUN npm run build
 
 EXPOSE 5500
 
-CMD [ "pm2-runtime", "start", "npm", "--", "start:prod" ]
+CMD [ "pm2-runtime", "start", "npm", "--", "run", "--", "start:prod" ]
