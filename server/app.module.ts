@@ -32,7 +32,7 @@ const typeOrmModuleOptions = {
       TagEntity,
       VisitorEntity,
     ],
-    synchronize: true, //! warning
+    synchronize: false, //! warning
     autoLoadEntities: true,
     logging: configService.get('NODE_ENV') === 'production' ? false : true,
     keepConnectionAlive: true,
