@@ -198,3 +198,32 @@ toastui-editor-md-block-quote,
 #editor {
   min-height: 120vh !important;
 }
+
+/** Table **/
+
+.toastui-editor-contents table {
+  margin: 20px 0;
+}
+
+.toastui-editor-contents table > thead {
+  border-color: var(--color-dark);
+  text-align: center;
+}
+
+.toastui-editor-contents table td {
+  border-color: gray;
+}
+
+.toastui-editor-contents table th {
+  border-color: gray;
+}
+
+.toastui-editor-contents table > thead th {
+  background-color: var(--bg-code-dark);
+  color: var(--color-dark);
+}
+
+.toastui-editor-contents table > tbody td {
+  /* background-color: var(--bg-code-dark) !important; */
+  color: var(--color-dark);
+}

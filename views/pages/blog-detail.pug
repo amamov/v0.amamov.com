@@ -4,7 +4,7 @@ extends ../layout/base.pug
 block style
   link(rel="stylesheet" href="https://uicdn.toast.com/editor/3.1.0/toastui-editor.min.css")
   link(rel="stylesheet" href="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/3.0.0/toastui-editor-plugin-code-syntax-highlight.min.css")
-  link(rel="stylesheet" href="/static/css/pages/blog.css")
+  link(rel="stylesheet" href="/static/css/pages/blog-detail.css")
 
 block main
   h1#title=blogTitle
@@ -25,8 +25,10 @@ block main
 
   hr.divider-line
   #viewer
-  .go-blog-list 
-    div(onclick="location.href='/';")
+  .blog_detail_footer 
+    a.copyright-img(href="https://creativecommons.org/licenses/by-nc-sa/2.0/kr/" target="_blank" rel="noopener noreferrer")
+      img(src="/static/images/copyright.svg" alt="copyright-icon" width="15px" height="15px")
+    div.go_blog_list(onclick="location.href='/';")
       img(src="/static/images/list.svg" alt="list-icon" width="20px" height="20px")
       span 목록
   include ../components/profile.pug

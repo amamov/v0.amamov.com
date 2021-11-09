@@ -12,7 +12,7 @@ import {
   UseGuards,
 } from '@nestjs/common'
 import { Response } from 'express'
-import { CurrentUser } from '@common/decorators/current-user.decorator'
+import { CurrentUser } from './common/decorators/current-user.decorator'
 import { BlogsService } from './blogs/blogs.service'
 import { TagsService } from './tags/tags.service'
 import { UserDTO } from './users/dtos/user.dto'
@@ -32,9 +32,9 @@ export class AppController {
     private readonly usersService: UsersService,
   ) {}
 
+  @Render('pages/home')
   @Get()
   @UseGuards(JwtAuthGuard)
-  @Render('pages/home')
   async getHomePage(
     @CurrentUser() currentUser: UserDTO | null,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
@@ -83,19 +83,9 @@ export class AppController {
     }
   }
 
-  @Get('uploads')
-  redirectUpload(@Res() res: Response) {
-    res.redirect('/blog/v1/uploads')
-  }
-
-  @Get('favicon.ico')
-  getFavicon() {
-    return '/static/favicon.ico'
-  }
-
+  @Render('pages/profile-detail')
   @Get('profile')
   @UseGuards(JwtAuthGuard)
-  @Render('pages/profile-detail')
   async getProfile(@CurrentUser() currentUser: UserDTO | null) {
     let hasPermission = false
     if (currentUser && currentUser.isAdmin) hasPermission = true
@@ -115,5 +105,10 @@ export class AppController {
       tags: tags.map((tag) => ({ ...tag, blogs: tag.blogs.length })),
       emptyMessage: '소개가 작성되지 않았습니다. 🙄',
     }
+  }
+
+  @Get('uploads')
+  redirectUpload(@Res() res: Response) {
+    res.redirect('/blog/uploads')
   }
 }

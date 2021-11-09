@@ -14,17 +14,17 @@ import {
   UseInterceptors,
 } from '@nestjs/common'
 import { Response } from 'express'
-import { CurrentUser } from '@common/decorators/current-user.decorator'
+import { CurrentUser } from '../common/decorators/current-user.decorator'
 import { JwtAuthGuard } from './jwt/jwt.guard'
 import { UsersService } from './users.service'
 import { UserLogInDTO } from './dtos/user-login.dto'
 import { UserDTO } from './dtos/user.dto'
 // import { UserRegisterDTO } from './dtos/user-register.dto'
-import { OnlyAdminInterceptor } from '@common/interceptors/only-admin.interceptor'
+import { OnlyAdminInterceptor } from '../common/interceptors/only-admin.interceptor'
 import { InjectRepository } from '@nestjs/typeorm'
 import { UserEntity } from './users.entity'
 import { Repository } from 'typeorm'
-import { HttpApiExceptionFilter } from '@common/exceptions/http-api-exception.filter'
+import { HttpApiExceptionFilter } from '../common/exceptions/http-api-exception.filter'
 
 @Controller()
 export class UsersController {
@@ -42,9 +42,9 @@ export class UsersController {
   //   return this.usersService.registerUser(body)
   // }
 
+  @Render('pages/login')
   @Get('login')
   @UseGuards(JwtAuthGuard)
-  @Render('pages/login')
   async getLogIn(
     @CurrentUser() currentUser: UserDTO,
     @Res({ passthrough: true }) response: Response,
@@ -68,10 +68,10 @@ export class UsersController {
     response.clearCookie('jwt')
   }
 
+  @Render('pages/user-update')
   @Get('users/v1/update')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(new OnlyAdminInterceptor())
-  @Render('pages/user-update')
   async getUserUpdatePage(@CurrentUser() currentUser: UserDTO) {
     return {
       title: 'amamov | profile update',

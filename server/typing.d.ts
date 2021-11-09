@@ -1,4 +1,4 @@
-import { UserDTO } from 'src/users/dtos/user.dto'
+import { UserDTO } from './users/dtos/user.dto'
 
 declare global {
   namespace Express {
@@ -6,6 +6,7 @@ declare global {
 
     interface Request {
       token?: string
+      user?: any
     }
   }
 }

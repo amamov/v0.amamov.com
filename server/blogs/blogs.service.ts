@@ -3,9 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Connection, FindConditions, Repository } from 'typeorm'
 import { BlogEntity } from './blogs.entity'
 import { paginate, IPaginationOptions } from 'nestjs-typeorm-paginate'
-import { UsersService } from 'src/users/users.service'
+import { UsersService } from '../users/users.service'
 import { BlogUploadDTO } from './dtos/blog-upload.dto'
-import { TagEntity } from 'src/tags/tags.entity'
+import { TagEntity } from '../tags/tags.entity'
 
 @Injectable()
 export class BlogsService {

@@ -2,8 +2,22 @@
 * GLOBAL
 */
 
+pre::-webkit-scrollbar {
+  height: 12px;
+}
+
+pre::-webkit-scrollbar-thumb {
+  background-color: rgb(134, 142, 150);
+}
+
+pre::-webkit-scrollbar-track {
+  background-color: rgb(52, 58, 64);
+}
+
 pre,
 code {
+  white-space: pre !important;
+  overflow: auto !important;
   background-color: var(--bg-code-dark) !important;
   font-size: 16px;
 }

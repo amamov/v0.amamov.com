@@ -1,9 +1,9 @@
 import { JwtPayload } from './jwt.payload'
-import { UsersService } from './../users.service'
+import { UsersService } from '../users.service'
 import { ExtractJwt, Strategy } from 'passport-jwt'
 import { PassportStrategy } from '@nestjs/passport'
 import { Injectable, UnauthorizedException } from '@nestjs/common'
-import { jwtExtractorFromCookies } from '@common/utils/jwtExtractorFromCookies'
+import { jwtExtractorFromCookies } from './jwtExtractorFromCookies'
 import { ConfigService } from '@nestjs/config'
 
 @Injectable()
