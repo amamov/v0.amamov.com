@@ -109,6 +109,6 @@ export class AppController {
 
   @Get('uploads')
   redirectUpload(@Res() res: Response) {
-    res.redirect('/blog/v1/uploads')
+    res.redirect('/blog/uploads')
   }
 }

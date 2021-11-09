@@ -119,9 +119,9 @@ export class BlogsController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Render('pages/blog-detail')
   @Get(':slug')
-  @Render('pages/blog')
+  @UseGuards(JwtAuthGuard)
   async getBlogDetailPage(
     @CurrentUser() currentUser: UserDTO | null,
     @ClientIp() visitorIp: string,

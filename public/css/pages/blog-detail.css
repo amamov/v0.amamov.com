@@ -45,25 +45,30 @@ ul {
   margin-left: 10px;
 }
 
-.go-blog-list {
-  margin: 40px 0;
+.blog_detail_footer {
+  margin: 40px 0 50px 0;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
 }
 
-.go-blog-list > div {
+.blog_detail_footer > .copyright-img {
+  display: block;
+  cursor: pointer;
+}
+
+.blog_detail_footer > .go_blog_list {
   display: flex;
   align-items: center;
   cursor: pointer;
   gap: 3px;
 }
 
-.go-blog-list > div {
+.blog_detail_footer > .go_blog_list {
   color: var(--color-dark);
 }
 
-.go-blog-list > div:hover {
+.blog_detail_footer > .go_blog_list:hover {
   color: var(--color-big-dark);
 }
 
