@@ -17,22 +17,22 @@ import {
 } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { InjectRepository } from '@nestjs/typeorm'
-import { CurrentUser } from '@common/decorators/current-user.decorator'
-import { HttpApiExceptionFilter } from '@common/exceptions/http-api-exception.filter'
-import { OnlyAdminInterceptor } from '@common/interceptors/only-admin.interceptor'
-import { AwsService } from '@common/services/aws.service'
+import { CurrentUser } from '../common/decorators/current-user.decorator'
+import { HttpApiExceptionFilter } from '../common/exceptions/http-api-exception.filter'
+import { OnlyAdminInterceptor } from '../common/interceptors/only-admin.interceptor'
+import { AwsService } from '../common/services/aws.service'
 import * as moment from 'moment'
-import { UserDTO } from 'src/users/dtos/user.dto'
-import { JwtAuthGuard } from 'src/users/jwt/jwt.guard'
+import { UserDTO } from '../users/dtos/user.dto'
+import { JwtAuthGuard } from '../users/jwt/jwt.guard'
 import { BlogImageEntity } from './blog-images.entity'
 import { BlogUploadBodyPipe } from './blog-upload-body.pipe'
 import { BlogEntity } from './blogs.entity'
 import { BlogUploadDTO } from './dtos/blog-upload.dto'
-import { ClientIp } from '@common/decorators/client-real-ip.decorator'
-import { VisitorEntity } from 'src/visitors/visitors.entity'
+import { ClientIp } from '../common/decorators/client-real-ip.decorator'
+import { VisitorEntity } from '../visitors/visitors.entity'
 import { BlogsService } from './blogs.service'
 import { Connection, Repository } from 'typeorm'
-import { TagEntity } from 'src/tags/tags.entity'
+import { TagEntity } from '../tags/tags.entity'
 
 @Controller('blog')
 export class BlogsController {
@@ -52,10 +52,10 @@ export class BlogsController {
     private readonly awsService: AwsService,
   ) {}
 
+  @Render('pages/blog-update')
   @Get('v1/update/:blogSlug')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(new OnlyAdminInterceptor())
-  @Render('pages/blog-update')
   async getBlogUpdate(@Param('blogSlug') blogSlug: string) {
     try {
       const blog = await this.blogsRepository
@@ -82,10 +82,10 @@ export class BlogsController {
     }
   }
 
+  @Render('pages/uploader')
   @Get('v1/uploads')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(new OnlyAdminInterceptor())
-  @Render('pages/uploader')
   async getBlogUploadPage() {
     const context = { title: 'amamov | upload', blogId: '' }
     try {
@@ -119,9 +119,9 @@ export class BlogsController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':slug')
   @Render('pages/blog')
-  @UseGuards(JwtAuthGuard)
   async getBlogDetailPage(
     @CurrentUser() currentUser: UserDTO | null,
     @ClientIp() visitorIp: string,
