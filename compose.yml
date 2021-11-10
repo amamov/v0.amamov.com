@@ -2,7 +2,7 @@ version: '3.1'
 
 services:
   app:
-    image: amamov/amamov:1.16.0 #! version up!
+    image: amamov/amamov:1.17.0 #! version up!
     restart: always
     networks:
       - network

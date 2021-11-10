@@ -13,11 +13,13 @@ const editorUploadImage = async (blob) => {
     throw new Error('Server or Network error')
   }
 }
+const currentWidth = window.innerWidth
+const previewStyle = currentWidth >= 700 ? 'vertical' : 'tab'
 const editor = new Editor({
   el: document.querySelector('#editor'),
   height: '80vh',
   initialEditType: 'markdown',
-  previewStyle: 'tab',
+  previewStyle,
   plugins: [[codeSyntaxHighlight, { highlighter: Prism }]],
   usageStatistics: false,
   viewer: true,
