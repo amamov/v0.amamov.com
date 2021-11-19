@@ -30,10 +30,10 @@ block main
         .blog-item-title=blog.title
         .blog-item-description=blog.description
         //- 블로그에 해당하는 태그들 issue #13
-        //- ul.blog-tag-list-self
-        //-   for blogTag in blog.tags
-        //-     li
-        //-       a.blog-tag-self(href=`/?tag=${blogTag.name}`) ##{blogTag.name}
+        ul.blog-tag-list-self
+          for blogTag in blog.tags
+            li
+              a.blog-tag-self(href=`/?tag=${blogTag.name}`) ##{blogTag.name}
       hr.divider-line
 
   include ../components/pagination.pug

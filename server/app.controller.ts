@@ -73,6 +73,7 @@ export class AppController {
         isPrivate: blog.isPrivate,
         title: blog.title,
         description: blog.description,
+        tags: blog.tags,
       })),
       currentPage: blogs.meta.currentPage,
       totalPage: blogs.meta.totalPages,

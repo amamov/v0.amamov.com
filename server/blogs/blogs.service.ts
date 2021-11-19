@@ -132,35 +132,24 @@ export class BlogsService {
         'b.isPrivate',
         'b.slug',
       ])
-    // .leftJoinAndSelect('b.tags', 't') // issue : #13
     // .offset((page - 1) * limit)
     // .limit(limit)
-
     if (!hasPermission) blogsQueryBuilder.andWhere('b.isPrivate = false')
-
-    if (tagName)
-      blogsQueryBuilder.leftJoin('b.tags', 't').andWhere('t.name = :tagName', {
-        tagName: tagName,
-      }) // issue : #13
     if (searchKeyword)
       blogsQueryBuilder
         .andWhere('b.title LIKE :title', { title: `%${searchKeyword}%` })
         .orWhere('b.description LIKE :description', {
           description: `%${searchKeyword}%`,
         })
-
+    if (tagName)
+      blogsQueryBuilder.innerJoinAndSelect('b.tags', 't', 't.name = :tagName', {
+        tagName: tagName,
+      })
+    else blogsQueryBuilder.innerJoinAndSelect('b.tags', 't')
     return await paginate<BlogEntity>(blogsQueryBuilder, {
       ...pagenationOptions,
       limit,
       page,
     })
-
-    // return {
-    //   items: await blogsQueryBuilder.getMany(),
-    //   meta: {
-    //     currentPage: page,
-    //     totalPages: ...,
-    //   },
-    // }
   }
 }
