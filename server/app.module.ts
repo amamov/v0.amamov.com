@@ -1,4 +1,10 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
+import {
+  CacheInterceptor,
+  CacheModule,
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+} from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm'
 import * as Joi from 'joi'
@@ -13,6 +19,7 @@ import { BlogEntity } from './blogs/blogs.entity'
 import { BlogImageEntity } from './blogs/blog-images.entity'
 import { TagEntity } from './tags/tags.entity'
 import { VisitorEntity } from './visitors/visitors.entity'
+import { APP_INTERCEPTOR } from '@nestjs/core'
 
 const typeOrmModuleOptions = {
   useFactory: async (
@@ -59,6 +66,10 @@ const typeOrmModuleOptions = {
         DB_NAME: Joi.string().required(),
       }),
     }),
+    CacheModule.register({
+      ttl: 20, // seconds
+      max: 20, // maximum number of items in cache
+    }),
     TypeOrmModule.forRootAsync(typeOrmModuleOptions),
     UsersModule,
     TagsModule,
@@ -66,6 +77,12 @@ const typeOrmModuleOptions = {
     VisitorsModule,
   ],
   controllers: [AppController],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CacheInterceptor,
+    },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

@@ -196,7 +196,7 @@ footer {
 }
 
 /* page animation */
-@keyframes fade-in-out {
+/* @keyframes fade-in-out {
   from {
     opacity: 0;
   }
@@ -208,4 +208,4 @@ footer {
 body {
   animation-duration: 1s;
   animation-name: fade-in-out;
-}
+} */
