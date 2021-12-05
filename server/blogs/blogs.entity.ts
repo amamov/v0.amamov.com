@@ -78,6 +78,7 @@ export class BlogEntity extends CommonEntity {
     name: 'BLOG_TAG',
     joinColumn: {
       name: 'blog_id',
+
       referencedColumnName: 'id',
     },
     inverseJoinColumn: {
